@@ -14,6 +14,8 @@
   ],
   "scripts": {
     "build": "tsc",
+    "prettier": "yarn prettier-ci --write",
+    "prettier-ci": "prettier --check '**/*.{ts,json,md,yml}'",
     "test": "node src/tests.js"
   },
   "prettier": {
