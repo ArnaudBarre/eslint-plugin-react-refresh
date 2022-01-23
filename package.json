@@ -1,0 +1,33 @@
+{
+  "name": "eslint-plugin-react-refresh",
+  "description": "Validate that your components can safely be updated with fast refresh",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Arnaud Barré (https://github.com/ArnaudBarre)",
+  "main": "src/index.js",
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "react",
+    "react-refresh",
+    "fast refresh"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node src/tests.js"
+  },
+  "prettier": {
+    "trailingComma": "all"
+  },
+  "peerDependencies": {
+    "eslint": ">=7"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.4.0",
+    "@types/node": "^17.0.10",
+    "@typescript-eslint/experimental-utils": "^5.10.0",
+    "eslint": "^8.7.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.5"
+  }
+}
