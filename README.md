@@ -1,4 +1,4 @@
-# eslint-plugin-react-refresh
+# eslint-plugin-react-refresh [![npm](https://img.shields.io/npm/v/eslint-plugin-react-refresh)](https://www.npmjs.com/package/eslint-plugin-react-refresh)
 
 Validate that your components can safely be updated with fast refresh.
 
@@ -43,13 +43,13 @@ export * from "./foo";
 
 ## Pass
 
-```js
+```jsx
 export default function Foo() {
   return <></>;
 }
 ```
 
-```js
+```jsx
 const foo = () => {};
 export const Bar = () => <></>;
 ```
