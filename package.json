@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-react-refresh",
   "description": "Validate that your components can safely be updated with fast refresh",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "author": "Arnaud Barré (https://github.com/ArnaudBarre)",
   "main": "src/index.js",
