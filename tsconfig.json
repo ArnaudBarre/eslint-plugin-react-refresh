@@ -10,7 +10,7 @@
     "moduleResolution": "node", // Allow `index` imports
     "resolveJsonModule": true, // Allow json import
     "forceConsistentCasingInFileNames": true, // Avoid difference in case between file name and import
-    "allowSyntheticDefaultImports": true, // Allow import fs from "fs"
+    "esModuleInterop": true, // Allow import fs from "fs"
 
     /* Linting */
     "strict": true,
