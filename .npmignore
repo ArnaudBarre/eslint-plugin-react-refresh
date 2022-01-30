@@ -2,3 +2,4 @@
 tsconfig.json
 test*
 .github
+CHANGELOG.md
