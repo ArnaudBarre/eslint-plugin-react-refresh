@@ -6,7 +6,7 @@ Validate that your components can safely be updated with fast refresh.
 
 ⚠️ To avoid false positive, this plugin is only applied on `tsx` & `jsx` files ⚠️
 
-Like the implementation for [vite](https://github.com/vitejs/vite/blob/e6495f0a52c9bd2cae166934dc965f8955ce035d/packages/plugin-react/src/fast-refresh.ts#L108), the plugin rely on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there is some limitations:
+Like the implementation for [vite](https://github.com/vitejs/vite/blob/e6495f0a52c9bd2cae166934dc965f8955ce035d/packages/plugin-react/src/fast-refresh.ts#L108), the plugin rely on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there are some limitations:
 
 - `export *` are not supported and will be reported as an error
 - Anonymous function are not supported (i.e `export default function() {}`)
@@ -14,7 +14,7 @@ Like the implementation for [vite](https://github.com/vitejs/vite/blob/e6495f0a5
 - Full uppercase export would be considered as an error. It can be disabled locally when it's effectively a React component:
 
 ```jsx
-// eslint-disable-next-line react-refresh/eslint-plugin-react-refresh
+// eslint-disable-next-line react-refresh/only-export-components
 export const CMS = () => <></>;
 ```
 

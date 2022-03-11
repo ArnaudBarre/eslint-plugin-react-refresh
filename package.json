@@ -5,6 +5,10 @@
   "license": "MIT",
   "author": "Arnaud Barré (https://github.com/ArnaudBarre)",
   "main": "src/index.js",
+  "files": [
+    "src/index.js",
+    "src/only-export-components.js"
+  ],
   "repository": "github:ArnaudBarre/eslint-plugin-react-refresh",
   "keywords": [
     "eslint",
