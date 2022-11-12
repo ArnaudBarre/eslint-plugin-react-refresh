@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",

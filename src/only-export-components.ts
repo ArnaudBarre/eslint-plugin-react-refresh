@@ -1,8 +1,18 @@
 import { TSESLint } from "@typescript-eslint/utils";
 import { TSESTree } from "@typescript-eslint/types";
 
+const possibleReactExportRE = /^[A-Z][a-zA-Z]*$/;
+// Only letters, starts with uppercase and at least one lowercase
+// This can lead to some false positive (ex: `const CMS = () => <></>`)
+// But allow to catch `export const CONSTANT = 3`
+const strictReactExportRE = /^[A-Z][a-zA-Z]*[a-z]+[a-zA-Z]*$/;
+
 export const onlyExportComponents: TSESLint.RuleModule<
-  "exportAll" | "namedExport" | "anonymousExport"
+  | "exportAll"
+  | "namedExport"
+  | "anonymousExport"
+  | "noExport"
+  | "localComponents"
 > = {
   meta: {
     messages: {
@@ -12,6 +22,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
         "Fast refresh only works when a file only export components. Use a new file to share constant or functions between components.",
       anonymousExport:
         "Fast refresh can't handle anonymous component. Add a name to your export.",
+      localComponents:
+        "Fast refresh only works when a file only export components. Move your component(s) to a separate file.",
+      noExport:
+        "Fast refresh only works when a file has exports. Move your component(s) to a separate file.",
     },
     type: "problem",
     schema: [],
@@ -22,21 +36,34 @@ export const onlyExportComponents: TSESLint.RuleModule<
 
     return {
       Program(program) {
+        let hasExports = false;
         let mayHaveReactExport = false;
+        const localComponents: TSESTree.Identifier[] = [];
         const nonComponentExport: TSESTree.BindingName[] = [];
 
-        const handleIdentifier = (identifierNode: TSESTree.BindingName) => {
+        const handleLocalIdentifier = (
+          identifierNode: TSESTree.BindingName,
+        ) => {
+          if (identifierNode.type !== "Identifier") return;
+          if (possibleReactExportRE.test(identifierNode.name)) {
+            localComponents.push(identifierNode);
+          }
+        };
+
+        const handleExportIdentifier = (
+          identifierNode: TSESTree.BindingName,
+        ) => {
           if (identifierNode.type !== "Identifier") {
             nonComponentExport.push(identifierNode);
             return;
           }
-          if (/^[A-Z][a-zA-Z]*$/.test(identifierNode.name)) {
+          if (
+            !mayHaveReactExport &&
+            possibleReactExportRE.test(identifierNode.name)
+          ) {
             mayHaveReactExport = true;
           }
-          // Only letters, starts with uppercase and at least one lowercase
-          // This can lead to some false positive (ex: `const CMS = () => <></>`)
-          // But allow to catch `export const CONSTANT = 3`
-          if (!/^[A-Z][a-zA-Z]*[a-z]+[a-zA-Z]*$/.test(identifierNode.name)) {
+          if (!strictReactExportRE.test(identifierNode.name)) {
             nonComponentExport.push(identifierNode);
           }
         };
@@ -44,26 +71,31 @@ export const onlyExportComponents: TSESLint.RuleModule<
         const handleExportDeclaration = (node: TSESTree.ExportDeclaration) => {
           if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
-              handleIdentifier(variable.id);
+              handleExportIdentifier(variable.id);
             }
           } else if (node.type === "FunctionDeclaration") {
             if (node.id === null) {
               context.report({ messageId: "anonymousExport", node });
             } else {
-              handleIdentifier(node.id);
+              handleExportIdentifier(node.id);
             }
           }
         };
 
         for (const node of program.body) {
           if (node.type === "ExportAllDeclaration") {
+            hasExports = true;
             context.report({ messageId: "exportAll", node });
           } else if (node.type === "ExportDefaultDeclaration") {
+            hasExports = true;
             if (
               node.declaration.type === "VariableDeclaration" ||
               node.declaration.type === "FunctionDeclaration"
             ) {
               handleExportDeclaration(node.declaration);
+            }
+            if (node.declaration.type === "Identifier") {
+              handleExportIdentifier(node.declaration);
             }
             if (
               node.declaration.type === "ArrowFunctionExpression" &&
@@ -72,17 +104,34 @@ export const onlyExportComponents: TSESLint.RuleModule<
               context.report({ messageId: "anonymousExport", node });
             }
           } else if (node.type === "ExportNamedDeclaration") {
+            hasExports = true;
             if (node.declaration) handleExportDeclaration(node.declaration);
             for (const specifier of node.specifiers) {
-              handleIdentifier(specifier.exported);
+              handleExportIdentifier(specifier.exported);
             }
+          } else if (node.type === "VariableDeclaration") {
+            for (const variable of node.declarations) {
+              handleLocalIdentifier(variable.id);
+            }
+          } else if (node.type === "FunctionDeclaration") {
+            handleLocalIdentifier(node.id);
           }
         }
 
-        if (!mayHaveReactExport) return;
-
-        for (const node of nonComponentExport) {
-          context.report({ messageId: "namedExport", node });
+        if (hasExports) {
+          if (mayHaveReactExport) {
+            for (const node of nonComponentExport) {
+              context.report({ messageId: "namedExport", node });
+            }
+          } else if (localComponents.length) {
+            for (const node of localComponents) {
+              context.report({ messageId: "localComponents", node });
+            }
+          }
+        } else if (localComponents.length) {
+          for (const node of localComponents) {
+            context.report({ messageId: "noExport", node });
+          }
         }
       },
     };

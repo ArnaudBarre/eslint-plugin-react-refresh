@@ -57,6 +57,16 @@ export default function () {}
 export * from "./foo";
 ```
 
+```jsx
+const Tab = () => {};
+export const tabs = [<Tab />, <Tab />];
+```
+
+```jsx
+const App = () => {};
+createRoot(document.getElementById("root")).render(<App />);
+```
+
 ## Pass
 
 ```jsx
@@ -68,4 +78,9 @@ export default function Foo() {
 ```jsx
 const foo = () => {};
 export const Bar = () => <></>;
+```
+
+```jsx
+import { App } from "./App";
+createRoot(document.getElementById("root")).render(<App />);
 ```

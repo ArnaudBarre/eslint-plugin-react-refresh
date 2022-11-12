@@ -3,7 +3,11 @@ import { RuleTester } from "eslint";
 import { onlyExportComponents } from "./only-export-components";
 
 const ruleTester = new RuleTester({
-  parserOptions: { sourceType: "module", ecmaVersion: 2018 },
+  parserOptions: {
+    sourceType: "module",
+    ecmaVersion: 2018,
+    ecmaFeatures: { jsx: true },
+  },
 });
 
 const valid = [
@@ -96,6 +100,16 @@ const invalid = [
     name: "Component and constant",
     code: "export const CONSTANT = 3; export const Foo = () => {};",
     errorId: "namedExport",
+  },
+  {
+    name: "Unexported component and export",
+    code: "const Tab = () => {}; export const tabs = [<Tab />, <Tab />];",
+    errorId: "localComponents",
+  },
+  {
+    name: "Unexported component and no export",
+    code: "const App = () => {}; createRoot(document.getElementById('root')).render(<App />);",
+    errorId: "noExport",
   },
 ];
 
