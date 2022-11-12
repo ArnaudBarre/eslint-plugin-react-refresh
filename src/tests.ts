@@ -1,5 +1,6 @@
+#!/usr/bin/env tnode
 import { RuleTester } from "eslint";
-import { rule } from "./only-export-components";
+import { onlyExportComponents } from "./only-export-components";
 
 const ruleTester = new RuleTester({
   parserOptions: { sourceType: "module", ecmaVersion: 2018 },
@@ -105,7 +106,7 @@ const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
     ruleTester.run(
       "only-export-components",
       // @ts-ignore Mismatch between typescript-eslint and eslint
-      rule,
+      onlyExportComponents,
       cases,
     );
     console.log(`${name} ✅`);

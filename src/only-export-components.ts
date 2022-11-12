@@ -1,8 +1,7 @@
-import { TSESLint } from "@typescript-eslint/experimental-utils";
+import { TSESLint } from "@typescript-eslint/utils";
 import { TSESTree } from "@typescript-eslint/types";
-import { ExportDeclaration } from "@typescript-eslint/types/dist/ast-spec";
 
-export const rule: TSESLint.RuleModule<
+export const onlyExportComponents: TSESLint.RuleModule<
   "exportAll" | "namedExport" | "anonymousExport"
 > = {
   meta: {
@@ -17,6 +16,7 @@ export const rule: TSESLint.RuleModule<
     type: "problem",
     schema: [],
   },
+  defaultOptions: [],
   create: (context) => {
     if (!context.getFilename().endsWith("x")) return {};
 
@@ -41,7 +41,7 @@ export const rule: TSESLint.RuleModule<
           }
         };
 
-        const handleExportDeclaration = (node: ExportDeclaration) => {
+        const handleExportDeclaration = (node: TSESTree.ExportDeclaration) => {
           if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
               handleIdentifier(variable.id);
