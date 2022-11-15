@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+Allow numbers in component names (Fixes #1)
+
 ## 0.3.0
 
 Report an error when a file that contains components that can't be fast-refreshed because:

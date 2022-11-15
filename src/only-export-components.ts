@@ -1,11 +1,11 @@
 import { TSESLint } from "@typescript-eslint/utils";
 import { TSESTree } from "@typescript-eslint/types";
 
-const possibleReactExportRE = /^[A-Z][a-zA-Z]*$/;
-// Only letters, starts with uppercase and at least one lowercase
+const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/;
+// Starts with uppercase and at least one lowercase
 // This can lead to some false positive (ex: `const CMS = () => <></>`)
 // But allow to catch `export const CONSTANT = 3`
-const strictReactExportRE = /^[A-Z][a-zA-Z]*[a-z]+[a-zA-Z]*$/;
+const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/;
 
 export const onlyExportComponents: TSESLint.RuleModule<
   | "exportAll"

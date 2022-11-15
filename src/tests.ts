@@ -32,6 +32,10 @@ const valid = [
     code: "export const Foo = () => {};",
   },
   {
+    name: "Direct export AF component with number",
+    code: "export const Foo2 = () => {};",
+  },
+  {
     name: "Export AF component",
     code: "const Foo = () => {}; export { Foo };",
   },
