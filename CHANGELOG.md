@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+Ignore test files (`*.test.*`, `*.spec.*`) (Fixes #2)
+
 ## 0.3.1
 
 Allow numbers in component names (Fixes #1)

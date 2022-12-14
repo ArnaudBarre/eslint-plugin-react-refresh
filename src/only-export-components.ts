@@ -32,7 +32,14 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
   defaultOptions: [],
   create: (context) => {
-    if (!context.getFilename().endsWith("x")) return {};
+    const filename = context.getFilename();
+    if (
+      !filename.endsWith("x") ||
+      filename.includes(".test.") ||
+      filename.includes(".spec.")
+    ) {
+      return {};
+    }
 
     return {
       Program(program) {
