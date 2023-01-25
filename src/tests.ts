@@ -67,6 +67,16 @@ const valid = [
     name: "Direct export default AF",
     code: "export default function foo () {};",
   },
+  {
+    name: "Non JSX expression export a const",
+    code: "export const A_CONST='I AM NOT A JSX'",
+  },
+  {
+    name: "Non JSX expression export a function",
+    code: `export function getSomething = () {
+      return "I am not a JSX"
+    } `,
+  }
 ];
 
 const invalid = [

@@ -34,7 +34,6 @@ export const onlyExportComponents: TSESLint.RuleModule<
   create: (context) => {
     const filename = context.getFilename();
     if (
-      !filename.endsWith("x") ||
       filename.includes(".test.") ||
       filename.includes(".spec.")
     ) {
