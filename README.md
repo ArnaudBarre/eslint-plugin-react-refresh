@@ -4,7 +4,17 @@ Validate that your components can safely be updated with fast refresh.
 
 ## Limitations
 
-⚠️ To avoid false positive, this plugin is only applied on `tsx` & `jsx` files ⚠️
+⚠️ To avoid false positive, by default this plugin is only applied on `tsx` & `jsx` files ⚠️
+
+To override this behavior and allow all files to be parsed use  `limitParsedFilesToPreventFalsePositives` option
+
+```
+...
+"react-refresh/only-export-components": ["warn", {
+ "limitParsedFilesToPreventFalsePositives": false
+}]
+...
+```
 
 Like the implementation for [vite](https://github.com/vitejs/vite/blob/e6495f0a52c9bd2cae166934dc965f8955ce035d/packages/plugin-react/src/fast-refresh.ts#L108), the plugin rely on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there are some limitations:
 

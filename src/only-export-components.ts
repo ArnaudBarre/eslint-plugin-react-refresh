@@ -32,10 +32,14 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
   defaultOptions: [],
   create: (context) => {
+    const config = context.options[0] || {};
+    const limitParsedFilesToPreventFalsePositives = config.limitParsedFilesToPreventFalsePositives || true;
     const filename = context.getFilename();
     if (
+      limitParsedFilesToPreventFalsePositives && (
+      !filename.endsWith("x") ||
       filename.includes(".test.") ||
-      filename.includes(".spec.")
+      filename.includes(".spec."))
     ) {
       return {};
     }
