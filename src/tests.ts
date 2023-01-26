@@ -67,7 +67,6 @@ const valid = [
     name: "Direct export default AF",
     code: "export default function foo () {};",
   },
-  }
 ];
 
 const invalid = [
