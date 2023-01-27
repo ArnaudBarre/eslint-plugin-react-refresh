@@ -7,6 +7,7 @@ const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/;
 // But allow to catch `export const CONSTANT = 3`
 const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/;
 
+
 export const onlyExportComponents: TSESLint.RuleModule<
   | "exportAll"
   | "namedExport"
@@ -28,12 +29,21 @@ export const onlyExportComponents: TSESLint.RuleModule<
         "Fast refresh only works when a file has exports. Move your component(s) to a separate file.",
     },
     type: "problem",
-    schema: [],
+    schema: [
+      {
+          "type": "object",
+          "properties": {
+              "limitParsedFilesToPreventFalsePositives": {
+                  "type": "boolean"
+              }
+          },
+          "additionalProperties": false
+      }
+  ]
   },
-  defaultOptions: [],
   create: (context) => {
-    const config = context.options[0] || {};
-    const limitParsedFilesToPreventFalsePositives = config.limitParsedFilesToPreventFalsePositives || true;
+    const config = context.options[0] || { limitParsedFilesToPreventFalsePositives: true };
+    const { limitParsedFilesToPreventFalsePositives } = config;
     const filename = context.getFilename();
     if (
       limitParsedFilesToPreventFalsePositives && (
@@ -48,6 +58,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       Program(program) {
         let hasExports = false;
         let mayHaveReactExport = false;
+        let reactIsInScope = false;
         const localComponents: TSESTree.Identifier[] = [];
         const nonComponentExport: TSESTree.BindingName[] = [];
 
@@ -92,7 +103,13 @@ export const onlyExportComponents: TSESLint.RuleModule<
           }
         };
 
-        for (const node of program.body) {
+        const handleImportDeclaration = (node: TSESTree.ImportDeclaration) => {
+          if (node.source.value === 'react') {
+            reactIsInScope = true;
+          }
+        };
+
+        for (const node of program.body) {;
           if (node.type === "ExportAllDeclaration") {
             hasExports = true;
             context.report({ messageId: "exportAll", node });
@@ -125,22 +142,28 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "FunctionDeclaration") {
             handleLocalIdentifier(node.id);
+          } else if (node.type === "ImportDeclaration") {
+            handleImportDeclaration(node);
           }
         }
 
-        if (hasExports) {
-          if (mayHaveReactExport) {
-            for (const node of nonComponentExport) {
-              context.report({ messageId: "namedExport", node });
+        const checkFile = limitParsedFilesToPreventFalsePositives ? true : reactIsInScope;
+
+        if (checkFile) {
+          if (hasExports) {
+            if (mayHaveReactExport) {
+              for (const node of nonComponentExport) {
+                context.report({ messageId: "namedExport", node });
+              }
+            } else if (localComponents.length) {
+              for (const node of localComponents) {
+                context.report({ messageId: "localComponents", node });
+              }
             }
           } else if (localComponents.length) {
             for (const node of localComponents) {
-              context.report({ messageId: "localComponents", node });
+              context.report({ messageId: "noExport", node });
             }
-          }
-        } else if (localComponents.length) {
-          for (const node of localComponents) {
-            context.report({ messageId: "noExport", node });
           }
         }
       },

@@ -67,6 +67,13 @@ const valid = [
     name: "Direct export default AF",
     code: "export default function foo () {};",
   },
+  {
+    name: "React is not in scope and limitParsedFilesToPreventFalsePositives is false",
+    code: `
+     export const CONSTANT = 3; export const Foo = () => {};
+    `,
+    options: [{limitParsedFilesToPreventFalsePositives: false}],
+  },
 ];
 
 const invalid = [
@@ -115,6 +122,24 @@ const invalid = [
     code: "const App = () => {}; createRoot(document.getElementById('root')).render(<App />);",
     errorId: "noExport",
   },
+  {
+    name: "React is in scope and limitParsedFilesToPreventFalsePositives is false",
+    code: `
+     import React from 'react';
+     export const CONSTANT = 3; export const Foo = () => {};
+    `,
+    options: [{limitParsedFilesToPreventFalsePositives: false}],
+    errorId: "namedExport",
+  },
+  {
+    name: "React is in scope and limitParsedFilesToPreventFalsePositives is false",
+    code: `
+     import * as R from 'react';
+     export const CONSTANT = 3; export const Foo = () => {};
+    `,
+    options: [{limitParsedFilesToPreventFalsePositives: false}],
+    errorId: "namedExport",
+  },
 ];
 
 let failedTests = 0;
@@ -135,17 +160,17 @@ const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
   }
 };
 
-valid.forEach(({ name, code }) => {
+valid.forEach(({ name, code, options }) => {
   it(name, {
-    valid: [{ filename: "Test.jsx", code }],
+    valid: [{ filename: "Test.jsx", code, options: options || [] }],
     invalid: [],
   });
 });
 
-invalid.forEach(({ name, code, errorId }) => {
+invalid.forEach(({ name, code, errorId, options }) => {
   it(name, {
     valid: [],
-    invalid: [{ filename: "Test.jsx", code, errors: [{ messageId: errorId }] }],
+    invalid: [{ filename: "Test.jsx", code, errors: [{ messageId: errorId }], options: options || [] }],
   });
 });
 
