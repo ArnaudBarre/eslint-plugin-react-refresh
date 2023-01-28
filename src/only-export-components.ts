@@ -7,13 +7,13 @@ const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/;
 // But allow to catch `export const CONSTANT = 3`
 const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/;
 
-
 export const onlyExportComponents: TSESLint.RuleModule<
   | "exportAll"
   | "namedExport"
   | "anonymousExport"
   | "noExport"
-  | "localComponents"
+  | "localComponents",
+  [] | [{ checkJS?: boolean }]
 > = {
   meta: {
     messages: {
@@ -31,28 +31,25 @@ export const onlyExportComponents: TSESLint.RuleModule<
     type: "problem",
     schema: [
       {
-          "type": "object",
-          "properties": {
-              "limitParsedFilesToPreventFalsePositives": {
-                  "type": "boolean"
-              }
-          },
-          "additionalProperties": false
-      }
-  ]
+        type: "object",
+        properties: {
+          checkJS: { type: "boolean" },
+        },
+        additionalProperties: false,
+      },
+    ],
   },
+  defaultOptions: [],
   create: (context) => {
-    const config = context.options[0] || { limitParsedFilesToPreventFalsePositives: true };
-    const { limitParsedFilesToPreventFalsePositives } = config;
+    const { checkJS } = context.options[0] || { checkJS: false };
     const filename = context.getFilename();
-    if (
-      limitParsedFilesToPreventFalsePositives && (
-      !filename.endsWith("x") ||
-      filename.includes(".test.") ||
-      filename.includes(".spec."))
-    ) {
-      return {};
-    }
+    // Skip tests files
+    if (filename.includes(".test.") || filename.includes(".spec.")) return {};
+    const shouldScan =
+      filename.endsWith(".jsx") ||
+      filename.endsWith(".tsx") ||
+      (checkJS && filename.endsWith(".js"));
+    if (!shouldScan) return {};
 
     return {
       Program(program) {
@@ -103,13 +100,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           }
         };
 
-        const handleImportDeclaration = (node: TSESTree.ImportDeclaration) => {
-          if (node.source.value === 'react') {
-            reactIsInScope = true;
-          }
-        };
-
-        for (const node of program.body) {;
+        for (const node of program.body) {
           if (node.type === "ExportAllDeclaration") {
             hasExports = true;
             context.report({ messageId: "exportAll", node });
@@ -143,27 +134,27 @@ export const onlyExportComponents: TSESLint.RuleModule<
           } else if (node.type === "FunctionDeclaration") {
             handleLocalIdentifier(node.id);
           } else if (node.type === "ImportDeclaration") {
-            handleImportDeclaration(node);
+            if (node.source.value === "react") {
+              reactIsInScope = true;
+            }
           }
         }
 
-        const checkFile = limitParsedFilesToPreventFalsePositives ? true : reactIsInScope;
+        if (checkJS && !reactIsInScope) return;
 
-        if (checkFile) {
-          if (hasExports) {
-            if (mayHaveReactExport) {
-              for (const node of nonComponentExport) {
-                context.report({ messageId: "namedExport", node });
-              }
-            } else if (localComponents.length) {
-              for (const node of localComponents) {
-                context.report({ messageId: "localComponents", node });
-              }
+        if (hasExports) {
+          if (mayHaveReactExport) {
+            for (const node of nonComponentExport) {
+              context.report({ messageId: "namedExport", node });
             }
           } else if (localComponents.length) {
             for (const node of localComponents) {
-              context.report({ messageId: "noExport", node });
+              context.report({ messageId: "localComponents", node });
             }
+          }
+        } else if (localComponents.length) {
+          for (const node of localComponents) {
+            context.report({ messageId: "noExport", node });
           }
         }
       },

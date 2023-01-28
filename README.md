@@ -4,20 +4,9 @@ Validate that your components can safely be updated with fast refresh.
 
 ## Limitations
 
-⚠️ To avoid false positive, by default this plugin is only applied on `tsx` & `jsx` files ⚠️
+⚠️ To avoid false positive, by default this plugin is only applied on `tsx` & `jsx` files. See options to run on JS files. ⚠️
 
-To override this behavior and allow all files to be parsed use  `limitParsedFilesToPreventFalsePositives` option
-
-```
-...
-"react-refresh/only-export-components": ["warn", {
- "limitParsedFilesToPreventFalsePositives": false
-}]
-...
-```
-In this case only files with React in scope will be parsed.
-
-Like the implementation for [vite](https://github.com/vitejs/vite/blob/e6495f0a52c9bd2cae166934dc965f8955ce035d/packages/plugin-react/src/fast-refresh.ts#L108), the plugin rely on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there are some limitations:
+The plugin rely on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there are some limitations:
 
 - `export *` are not supported and will be reported as an error
 - Anonymous function are not supported (i.e `export default function() {}`)
@@ -94,4 +83,16 @@ export const Bar = () => <></>;
 ```jsx
 import { App } from "./App";
 createRoot(document.getElementById("root")).render(<App />);
+```
+
+## Options
+
+### checkJS
+
+If your using JSX inside `.js` files (which I don't recommend because it forces you to configure every tool you use to switch the parser), you can still use the plugin by enabling this option. To reduce the number of false positive, only files importing `react` are checked.
+
+```json
+{
+  "react-refresh/only-export-components": ["warn", { "checkJS": true }]
+}
 ```
