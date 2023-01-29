@@ -67,6 +67,17 @@ const valid = [
     name: "Direct export default AF",
     code: "export default function foo () {};",
   },
+  {
+    name: "Mixed export in JS without checkJS",
+    code: "export const foo = () => {}; export const Bar = () => {};",
+    filename: "Test.js",
+  },
+  {
+    name: "Mixed export in JS without react import",
+    code: "export const foo = () => {}; export const Bar = () => {};",
+    filename: "Test.js",
+    options: [{ checkJS: true }],
+  },
 ];
 
 const invalid = [
@@ -115,6 +126,16 @@ const invalid = [
     code: "const App = () => {}; createRoot(document.getElementById('root')).render(<App />);",
     errorId: "noExport",
   },
+  {
+    name: "Mixed export in JS with react import",
+    code: `
+     import React from 'react';
+     export const CONSTANT = 3; export const Foo = () => {};
+    `,
+    filename: "Test.js",
+    options: [{ checkJS: true }],
+    errorId: "namedExport",
+  },
 ];
 
 let failedTests = 0;
@@ -135,17 +156,24 @@ const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
   }
 };
 
-valid.forEach(({ name, code }) => {
+valid.forEach(({ name, code, filename, options = [] }) => {
   it(name, {
-    valid: [{ filename: "Test.jsx", code }],
+    valid: [{ filename: filename ?? "Test.jsx", code, options }],
     invalid: [],
   });
 });
 
-invalid.forEach(({ name, code, errorId }) => {
+invalid.forEach(({ name, code, errorId, filename, options = [] }) => {
   it(name, {
     valid: [],
-    invalid: [{ filename: "Test.jsx", code, errors: [{ messageId: errorId }] }],
+    invalid: [
+      {
+        filename: filename ?? "Test.jsx",
+        code,
+        errors: [{ messageId: errorId }],
+        options,
+      },
+    ],
   });
 });
 

@@ -12,7 +12,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | "namedExport"
   | "anonymousExport"
   | "noExport"
-  | "localComponents"
+  | "localComponents",
+  [] | [{ checkJS?: boolean }]
 > = {
   meta: {
     messages: {
@@ -28,23 +29,33 @@ export const onlyExportComponents: TSESLint.RuleModule<
         "Fast refresh only works when a file has exports. Move your component(s) to a separate file.",
     },
     type: "problem",
-    schema: [],
+    schema: [
+      {
+        type: "object",
+        properties: {
+          checkJS: { type: "boolean" },
+        },
+        additionalProperties: false,
+      },
+    ],
   },
   defaultOptions: [],
   create: (context) => {
+    const { checkJS } = context.options[0] || { checkJS: false };
     const filename = context.getFilename();
-    if (
-      !filename.endsWith("x") ||
-      filename.includes(".test.") ||
-      filename.includes(".spec.")
-    ) {
-      return {};
-    }
+    // Skip tests files
+    if (filename.includes(".test.") || filename.includes(".spec.")) return {};
+    const shouldScan =
+      filename.endsWith(".jsx") ||
+      filename.endsWith(".tsx") ||
+      (checkJS && filename.endsWith(".js"));
+    if (!shouldScan) return {};
 
     return {
       Program(program) {
         let hasExports = false;
         let mayHaveReactExport = false;
+        let reactIsInScope = false;
         const localComponents: TSESTree.Identifier[] = [];
         const nonComponentExport: TSESTree.BindingName[] = [];
 
@@ -122,8 +133,14 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "FunctionDeclaration") {
             handleLocalIdentifier(node.id);
+          } else if (node.type === "ImportDeclaration") {
+            if (node.source.value === "react") {
+              reactIsInScope = true;
+            }
           }
         }
+
+        if (checkJS && !reactIsInScope) return;
 
         if (hasExports) {
           if (mayHaveReactExport) {

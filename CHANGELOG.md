@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.3.3
+
+Add checkJS option (#5) (Fixes #4)
+
 ## 0.3.2
 
 Ignore test files (`*.test.*`, `*.spec.*`) (Fixes #2)
