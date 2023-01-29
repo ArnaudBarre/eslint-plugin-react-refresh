@@ -1,6 +1,6 @@
 # Changelog
 
-# 0.3.3
+## 0.3.3
 
 Add checkJS option (#5) (Fixes #4)
 
