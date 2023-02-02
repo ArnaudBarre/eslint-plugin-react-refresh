@@ -78,6 +78,22 @@ const valid = [
     filename: "Test.js",
     options: [{ checkJS: true }],
   },
+  {
+    name: "HOC",
+    code: `
+      const MainPageHeader = () => <HeaderWrapper/>
+      export const SubScreen =  withRouter(MainPageHeader);
+    `,
+    filename: "Test.jsx",
+    },
+    {
+      name: "export default HOC",
+      code: `
+        const MainPageHeader = () => <HeaderWrapper/>
+        export default withRouter(MainPageHeader);
+      `,
+      filename: "Test.jsx",
+      },
 ];
 
 const invalid = [
@@ -135,7 +151,7 @@ const invalid = [
     filename: "Test.js",
     options: [{ checkJS: true }],
     errorId: "namedExport",
-  },
+  }
 ];
 
 let failedTests = 0;
