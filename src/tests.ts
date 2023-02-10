@@ -136,6 +136,12 @@ const invalid = [
     options: [{ checkJS: true }],
     errorId: "namedExport",
   },
+  {
+    name: "export default compose",
+    code: `export default compose()(MainView);`,
+    filename: "Test.jsx",
+    errorId: "anonymousExport",
+  },
 ];
 
 let failedTests = 0;

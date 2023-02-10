@@ -97,6 +97,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
             } else {
               handleExportIdentifier(node.id);
             }
+          } else if (node.type === "CallExpression") {
+            context.report({ messageId: "anonymousExport", node });
           }
         };
 
@@ -108,7 +110,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
             hasExports = true;
             if (
               node.declaration.type === "VariableDeclaration" ||
-              node.declaration.type === "FunctionDeclaration"
+              node.declaration.type === "FunctionDeclaration" ||
+              node.declaration.type === "CallExpression"
             ) {
               handleExportDeclaration(node.declaration);
             }
