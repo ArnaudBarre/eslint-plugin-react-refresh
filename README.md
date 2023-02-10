@@ -51,6 +51,7 @@ export const Foo = () => <></>;
 
 ```jsx
 export default function () {}
+export default compose()(MainComponent)
 ```
 
 ```jsx

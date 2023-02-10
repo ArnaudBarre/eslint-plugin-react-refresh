@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.4
+
+Report default CallExpression exports (#7) (Fixes #6)
+
+This allows to report a warning for this kind of patterns that creates anonymous components:
+
+`export default compose()(MainComponent)`
+
 ## 0.3.3
 
 Add checkJS option (#5) (Fixes #4)
