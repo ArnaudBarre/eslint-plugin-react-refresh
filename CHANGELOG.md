@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.5
+
+Ignore stories files (`*.stories.*`) (Fixes #10)
+
 ## 0.3.4
 
 Report default CallExpression exports (#7) (Fixes #6)

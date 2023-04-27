@@ -43,8 +43,14 @@ export const onlyExportComponents: TSESLint.RuleModule<
   create: (context) => {
     const { checkJS } = context.options[0] || { checkJS: false };
     const filename = context.getFilename();
-    // Skip tests files
-    if (filename.includes(".test.") || filename.includes(".spec.")) return {};
+    // Skip tests & stories files
+    if (
+      filename.includes(".test.") ||
+      filename.includes(".spec.") ||
+      filename.includes(".stories.")
+    ) {
+      return {};
+    }
     const shouldScan =
       filename.endsWith(".jsx") ||
       filename.endsWith(".tsx") ||

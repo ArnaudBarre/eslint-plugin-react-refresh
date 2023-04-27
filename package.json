@@ -1,13 +1,13 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",
     "prettier": "bun prettier-ci --write",
     "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{ts,json,md,yml}'",
     "test": "src/tests.ts",
-    "ci": "tsc && bun prettier-ci && bun test && bun run build"
+    "ci": "tsc && bun prettier-ci && bun run test && bun run build"
   },
   "prettier": {
     "trailingComma": "all"
