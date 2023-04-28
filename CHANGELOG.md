@@ -1,12 +1,29 @@
 # Changelog
 
+## Unreleased
+
+Allow all-uppercase function exports (fixes #11). This only works when using direct export.
+
+So this pattern doesn't warn anymore:
+
+```jsx
+export const CMS = () => <></>;
+```
+
+But this one will still warn:
+
+```jsx
+const CMS = () => <></>;
+export default CMS;
+```
+
 ## 0.3.5
 
-Ignore stories files (`*.stories.*`) (Fixes #10)
+Ignore stories files (`*.stories.*`) (fixes #10)
 
 ## 0.3.4
 
-Report default CallExpression exports (#7) (Fixes #6)
+Report default CallExpression exports (#7) (fixes #6)
 
 This allows to report a warning for this kind of patterns that creates anonymous components:
 
@@ -14,15 +31,15 @@ This allows to report a warning for this kind of patterns that creates anonymous
 
 ## 0.3.3
 
-Add checkJS option (#5) (Fixes #4)
+Add checkJS option (#5) (fixes #4)
 
 ## 0.3.2
 
-Ignore test files (`*.test.*`, `*.spec.*`) (Fixes #2)
+Ignore test files (`*.test.*`, `*.spec.*`) (fixes #2)
 
 ## 0.3.1
 
-Allow numbers in component names (Fixes #1)
+Allow numbers in component names (fixes #1)
 
 ## 0.3.0
 

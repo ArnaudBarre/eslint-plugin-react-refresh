@@ -3,8 +3,9 @@ import { TSESTree } from "@typescript-eslint/types";
 
 const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/;
 // Starts with uppercase and at least one lowercase
-// This can lead to some false positive (ex: `const CMS = () => <></>`)
+// This can lead to some false positive (ex: `const CMS = () => <></>; export default CMS`)
 // But allow to catch `export const CONSTANT = 3`
+// and the false positive can be avoided with direct name export
 const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/;
 
 export const onlyExportComponents: TSESLint.RuleModule<
@@ -76,6 +77,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
 
         const handleExportIdentifier = (
           identifierNode: TSESTree.BindingName,
+          isFunction?: boolean,
         ) => {
           if (identifierNode.type !== "Identifier") {
             nonComponentExport.push(identifierNode);
@@ -87,7 +89,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
           ) {
             mayHaveReactExport = true;
           }
-          if (!strictReactExportRE.test(identifierNode.name)) {
+          if (
+            !(isFunction ? possibleReactExportRE : strictReactExportRE).test(
+              identifierNode.name,
+            )
+          ) {
             nonComponentExport.push(identifierNode);
           }
         };
@@ -95,13 +101,16 @@ export const onlyExportComponents: TSESLint.RuleModule<
         const handleExportDeclaration = (node: TSESTree.ExportDeclaration) => {
           if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
-              handleExportIdentifier(variable.id);
+              handleExportIdentifier(
+                variable.id,
+                variable.init?.type === "ArrowFunctionExpression",
+              );
             }
           } else if (node.type === "FunctionDeclaration") {
             if (node.id === null) {
               context.report({ messageId: "anonymousExport", node });
             } else {
-              handleExportIdentifier(node.id);
+              handleExportIdentifier(node.id, true);
             }
           } else if (node.type === "CallExpression") {
             context.report({ messageId: "anonymousExport", node });

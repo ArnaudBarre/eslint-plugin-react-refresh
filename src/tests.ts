@@ -36,6 +36,14 @@ const valid = [
     code: "export const Foo2 = () => {};",
   },
   {
+    name: "Direct export uppercase function",
+    code: "export function CMS() {};",
+  },
+  {
+    name: "Direct export uppercase component",
+    code: "export const CMS = () => {};",
+  },
+  {
     name: "Export AF component",
     code: "const Foo = () => {}; export { Foo };",
   },

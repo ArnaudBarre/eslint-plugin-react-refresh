@@ -11,14 +11,7 @@ The plugin rely on naming conventions (i.e. use PascalCase for components, camel
 - `export *` are not supported and will be reported as an error
 - Anonymous function are not supported (i.e `export default function() {}`)
 - Class components are not supported
-- Full uppercase export would be considered as an error. It can be disabled locally when it's effectively a React component:
-
-```jsx
-// eslint-disable-next-line react-refresh/only-export-components
-export const CMS = () => <></>;
-```
-
-I may publish a rule base on type information from [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) to improve some limitations and catch some naming convention issues (like non-component function starting with an uppercase).
+- All-uppercase function export is considered an error when not using direct named export (ex `const CMS = () => <></>; export { CMS }`)
 
 ## Installation
 
