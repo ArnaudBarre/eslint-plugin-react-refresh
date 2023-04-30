@@ -14,7 +14,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | "anonymousExport"
   | "noExport"
   | "localComponents",
-  [] | [{ checkJS?: boolean }]
+  [] | [{ allowConstantExport?: boolean; checkJS?: boolean }]
 > = {
   meta: {
     messages: {
@@ -34,6 +34,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       {
         type: "object",
         properties: {
+          allowConstantExport: { type: "boolean" },
           checkJS: { type: "boolean" },
         },
         additionalProperties: false,
@@ -42,7 +43,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
   defaultOptions: [],
   create: (context) => {
-    const { checkJS } = context.options[0] || { checkJS: false };
+    const { allowConstantExport = false, checkJS = false } =
+      context.options[0] || {};
     const filename = context.getFilename();
     // Skip tests & stories files
     if (
@@ -64,7 +66,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
         let mayHaveReactExport = false;
         let reactIsInScope = false;
         const localComponents: TSESTree.Identifier[] = [];
-        const nonComponentExport: TSESTree.BindingName[] = [];
+        const nonComponentExports: TSESTree.BindingName[] = [];
 
         const handleLocalIdentifier = (
           identifierNode: TSESTree.BindingName,
@@ -78,9 +80,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
         const handleExportIdentifier = (
           identifierNode: TSESTree.BindingName,
           isFunction?: boolean,
+          init?: TSESTree.Expression | null,
         ) => {
           if (identifierNode.type !== "Identifier") {
-            nonComponentExport.push(identifierNode);
+            nonComponentExports.push(identifierNode);
             return;
           }
           if (
@@ -90,11 +93,20 @@ export const onlyExportComponents: TSESLint.RuleModule<
             mayHaveReactExport = true;
           }
           if (
+            allowConstantExport &&
+            init &&
+            (init.type === "Literal" ||
+              init.type === "TemplateLiteral" ||
+              init.type === "BinaryExpression")
+          ) {
+            return;
+          }
+          if (
             !(isFunction ? possibleReactExportRE : strictReactExportRE).test(
               identifierNode.name,
             )
           ) {
-            nonComponentExport.push(identifierNode);
+            nonComponentExports.push(identifierNode);
           }
         };
 
@@ -104,6 +116,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
               handleExportIdentifier(
                 variable.id,
                 variable.init?.type === "ArrowFunctionExpression",
+                variable.init,
               );
             }
           } else if (node.type === "FunctionDeclaration") {
@@ -162,7 +175,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
 
         if (hasExports) {
           if (mayHaveReactExport) {
-            for (const node of nonComponentExport) {
+            for (const node of nonComponentExports) {
               context.report({ messageId: "namedExport", node });
             }
           } else if (localComponents.length) {

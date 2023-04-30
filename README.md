@@ -38,11 +38,6 @@ export const Bar = () => <></>;
 ```
 
 ```jsx
-export const CONSTANT = 3;
-export const Foo = () => <></>;
-```
-
-```jsx
 export default function () {}
 export default compose()(MainComponent)
 ```
@@ -59,6 +54,13 @@ export const tabs = [<Tab />, <Tab />];
 ```jsx
 const App = () => {};
 createRoot(document.getElementById("root")).render(<App />);
+```
+
+## Pass with allowConstantExport
+
+```jsx
+export const CONSTANT = 3;
+export const Foo = () => <></>;
 ```
 
 ## Pass
@@ -80,6 +82,21 @@ createRoot(document.getElementById("root")).render(<App />);
 ```
 
 ## Options
+
+### allowConstantExport
+
+Don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.
+
+This should be enabled if the fast refresh implementation correctly handles this case (HMR when the constant doesn't change, propagate update to importers when the constant changes.). Vite supports it, PR welcome if you notice other integrations works well.
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "warn",
+    { "allowConstantExport": true }
+  ]
+}
+```
 
 ### checkJS
 

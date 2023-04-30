@@ -86,6 +86,21 @@ const valid = [
     filename: "Test.js",
     options: [{ checkJS: true }],
   },
+  {
+    name: "Component and number constant with allowConstantExport",
+    code: "export const foo = 4; export const Bar = () => {};",
+    options: [{ allowConstantExport: true }],
+  },
+  {
+    name: "Component and string constant with allowConstantExport",
+    code: "export const CONSTANT = 'Hello world'; export const Foo = () => {};",
+    options: [{ allowConstantExport: true }],
+  },
+  {
+    name: "Component and template literal with allowConstantExport",
+    code: "const foo = 'world'; export const CONSTANT = `Hello ${foo}`; export const Foo = () => {};",
+    options: [{ allowConstantExport: true }],
+  },
 ];
 
 const invalid = [
@@ -93,6 +108,12 @@ const invalid = [
     name: "Component and function",
     code: "export const foo = () => {}; export const Bar = () => {};",
     errorId: "namedExport",
+  },
+  {
+    name: "Component and function with allowConstantExport",
+    code: "export const foo = () => {}; export const Bar = () => {};",
+    errorId: "namedExport",
+    options: [{ allowConstantExport: true }],
   },
   {
     name: "Component and variable (direct export)",
