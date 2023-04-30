@@ -1,6 +1,7 @@
 #!/usr/bin/env tnode
+import { test } from "bun:test";
 import { RuleTester } from "eslint";
-import { onlyExportComponents } from "./only-export-components";
+import { onlyExportComponents } from "./only-export-components.ts";
 
 const ruleTester = new RuleTester({
   parserOptions: {
@@ -173,22 +174,15 @@ const invalid = [
   },
 ];
 
-let failedTests = 0;
-
 const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
-  try {
+  test(name, () => {
     ruleTester.run(
       "only-export-components",
       // @ts-ignore Mismatch between typescript-eslint and eslint
       onlyExportComponents,
       cases,
     );
-    console.log(`${name} ✅`);
-  } catch (e) {
-    console.log(`${name} ❌`);
-    console.error(e);
-    failedTests++;
-  }
+  });
 };
 
 valid.forEach(({ name, code, filename, options = [] }) => {
@@ -211,8 +205,3 @@ invalid.forEach(({ name, code, errorId, filename, options = [] }) => {
     ],
   });
 });
-
-if (failedTests) {
-  console.log(`${failedTests} tests failed`);
-  process.exit(1);
-}

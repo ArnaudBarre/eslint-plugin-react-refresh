@@ -13,9 +13,7 @@ build({
   outdir: "dist",
   platform: "node",
   target: "node14",
-  // https://github.com/oven-sh/bun/issues/2037
-  // external: Object.keys(packageJSON.peerDependencies),
-  external: ["eslint"],
+  external: Object.keys(packageJSON.peerDependencies),
 }).then(() => {
   execSync("cp LICENSE README.md dist/");
 
@@ -38,11 +36,7 @@ build({
           "react-refresh",
           "fast refresh",
         ],
-        // https://github.com/oven-sh/bun/issues/2037
-        // peerDependencies: packageJSON.peerDependencies,
-        peerDependencies: {
-          eslint: ">=7",
-        },
+        peerDependencies: packageJSON.peerDependencies,
       },
       null,
       2,
