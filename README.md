@@ -83,7 +83,7 @@ createRoot(document.getElementById("root")).render(<App />);
 
 ## Options
 
-### allowConstantExport
+### allowConstantExport <small>(v0.4.0)</small>
 
 Don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.
 
@@ -98,7 +98,7 @@ This should be enabled if the fast refresh implementation correctly handles this
 }
 ```
 
-### checkJS
+### checkJS <small>(v0.3.3)</small>
 
 If your using JSX inside `.js` files (which I don't recommend because it forces you to configure every tool you use to switch the parser), you can still use the plugin by enabling this option. To reduce the number of false positive, only files importing `react` are checked.
 
