@@ -42,6 +42,10 @@ const valid = [
     code: "export function CMS() {};",
   },
   {
+    name: "Uppercase component with forwardRef",
+    code: "export const SVG = forwardRef(() => <svg/>);",
+  },
+  {
     name: "Direct export uppercase component",
     code: "export const CMS = () => {};",
   },

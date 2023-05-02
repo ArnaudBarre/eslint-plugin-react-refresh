@@ -115,7 +115,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             for (const variable of node.declarations) {
               handleExportIdentifier(
                 variable.id,
-                variable.init?.type === "ArrowFunctionExpression",
+                canBeReactFunctionComponent(variable.init),
                 variable.init,
               );
             }
@@ -192,4 +192,15 @@ export const onlyExportComponents: TSESLint.RuleModule<
       },
     };
   },
+};
+
+const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
+  if (!init) return false;
+  if (init.type === "ArrowFunctionExpression") return true;
+  if (init.type === "CallExpression") {
+    if (init.callee.type === "Identifier") {
+      return ["memo", "forwardRef"].includes(init.callee.name);
+    }
+  }
+  return false;
 };

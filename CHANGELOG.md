@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.1
 
 - Ignore `export type *` (fixes #12)
+- Support for all-uppercase function wrapped in forwardRef/memo (#11)
 
 ## 0.4.0
 
