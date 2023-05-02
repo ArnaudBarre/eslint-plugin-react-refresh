@@ -132,6 +132,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
 
         for (const node of program.body) {
           if (node.type === "ExportAllDeclaration") {
+            if (node.exportKind === "type") continue;
             hasExports = true;
             context.report({ messageId: "exportAll", node });
           } else if (node.type === "ExportDefaultDeclaration") {

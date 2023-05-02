@@ -1,12 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Ignore `export type *` (fixes #12)
+
 ## 0.4.0
 
 ### Add `allowConstantExport` option (fixes #8)
 
-This option allow tp don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.
+This option allow to don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.
 
-This should be enabled if the fast refresh implementation correctly handles this case (HMR when the constant doesn't change, propagate update to importers when the constant changes.). Vite supports it, PR welcome if you notice other integrations works well.
+This should be enabled if the fast refresh implementation correctly handles this case (HMR when the constant doesn't change, propagate update to importers when the constant changes). Vite supports it, PR welcome if you notice other integrations works well.
 
 ### Allow all-uppercase function exports (fixes #11)
 

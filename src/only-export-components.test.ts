@@ -4,9 +4,10 @@ import { RuleTester } from "eslint";
 import { onlyExportComponents } from "./only-export-components.ts";
 
 const ruleTester = new RuleTester({
+  parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: {
     sourceType: "module",
-    ecmaVersion: 2018,
+    ecmaVersion: 2022,
     ecmaFeatures: { jsx: true },
   },
 });
@@ -75,6 +76,11 @@ const valid = [
   {
     name: "Direct export default AF",
     code: "export default function foo () {};",
+  },
+  {
+    name: "export type *",
+    code: "export type * from './module';",
+    filename: "Test.tsx",
   },
   {
     name: "Mixed export in JS without checkJS",
