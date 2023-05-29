@@ -19,11 +19,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
   meta: {
     messages: {
       exportAll:
-        "This rule can't verify that `export *` only export components",
+        "This rule can't verify that `export *` only exports components.",
       namedExport:
-        "Fast refresh only works when a file only export components. Use a new file to share constant or functions between components.",
+        "Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components.",
       anonymousExport:
-        "Fast refresh can't handle anonymous component. Add a name to your export.",
+        "Fast refresh can't handle anonymous components. Add a name to your export.",
       localComponents:
         "Fast refresh only works when a file only export components. Move your component(s) to a separate file.",
       noExport:
