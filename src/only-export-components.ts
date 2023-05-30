@@ -25,7 +25,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       anonymousExport:
         "Fast refresh can't handle anonymous components. Add a name to your export.",
       localComponents:
-        "Fast refresh only works when a file only export components. Move your component(s) to a separate file.",
+        "Fast refresh only works when a file only exports components. Move your component(s) to a separate file.",
       noExport:
         "Fast refresh only works when a file has exports. Move your component(s) to a separate file.",
     },
