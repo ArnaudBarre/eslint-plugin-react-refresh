@@ -23,7 +23,6 @@ npm i -D eslint-plugin-react-refresh
 
 ```json
 {
-  "plugins": ["react-refresh"],
   "rules": {
     "react-refresh/only-export-components": "warn"
   }
