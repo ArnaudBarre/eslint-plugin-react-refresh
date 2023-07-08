@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",
@@ -8,21 +8,18 @@
     "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{ts,json,md,yml}'",
     "ci": "tsc && bun prettier-ci && bun test && bun run build"
   },
-  "prettier": {
-    "trailingComma": "all"
-  },
   "peerDependencies": {
     "eslint": ">=7"
   },
   "devDependencies": {
-    "@nabla/tnode": "^0.9.0",
-    "@types/eslint": "^8.37.0",
-    "@types/node": "^18.16.3",
-    "@typescript-eslint/parser": "^5.59.2",
-    "@typescript-eslint/utils": "^5.59.1",
-    "bun-types": "^0.5.8",
-    "eslint": "^8.39.0",
-    "prettier": "^2.8.8",
-    "typescript": "^5.0.4"
+    "@arnaud-barre/tnode": "^0.18.0",
+    "@types/eslint": "^8.44.0",
+    "@types/node": "^18.16.19",
+    "@typescript-eslint/parser": "^5.61.0",
+    "@typescript-eslint/utils": "^5.61.0",
+    "bun-types": "^0.6.13",
+    "eslint": "^8.44.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.6"
   }
 }

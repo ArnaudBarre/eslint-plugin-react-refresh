@@ -3,7 +3,7 @@ import { rmSync, writeFileSync } from "fs";
 import { execSync } from "child_process";
 import { build } from "esbuild";
 
-import * as packageJSON from "../package.json";
+import packageJSON from "../package.json";
 
 rmSync("dist", { force: true, recursive: true });
 
