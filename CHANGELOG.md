@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3
+
+- Add warning for TS enums exports
+
 ## 0.4.2
 
 - Fix typos in messages (#15, #16). Thanks @adamschachne & @janikga!

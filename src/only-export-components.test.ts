@@ -157,6 +157,11 @@ const invalid = [
     errorId: "namedExport",
   },
   {
+    name: "Component and enum",
+    code: "export enum Tab { Home, Settings }; export const Bar = () => {};",
+    errorId: "namedExport",
+  },
+  {
     name: "Unexported component and export",
     code: "const Tab = () => {}; export const tabs = [<Tab />, <Tab />];",
     errorId: "localComponents",

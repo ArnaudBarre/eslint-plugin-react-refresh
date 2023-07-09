@@ -127,6 +127,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "CallExpression") {
             context.report({ messageId: "anonymousExport", node });
+          } else if (node.type === "TSEnumDeclaration") {
+            nonComponentExports.push(node.id);
           }
         };
 
