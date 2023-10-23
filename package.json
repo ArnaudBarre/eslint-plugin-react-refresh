@@ -12,14 +12,14 @@
     "eslint": ">=7"
   },
   "devDependencies": {
-    "@arnaud-barre/tnode": "^0.18.0",
-    "@types/eslint": "^8.44.0",
-    "@types/node": "^18.16.19",
-    "@typescript-eslint/parser": "^5.61.0",
-    "@typescript-eslint/utils": "^5.61.0",
-    "bun-types": "^0.6.13",
-    "eslint": "^8.44.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.1.6"
+    "@arnaud-barre/tnode": "^0.19.2",
+    "@types/eslint": "^8.44.6",
+    "@types/node": "^20.8.7",
+    "@typescript-eslint/parser": "^6.9.0",
+    "@typescript-eslint/utils": "^6.9.0",
+    "bun-types": "^1.0.7",
+    "eslint": "^8.52.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   }
 }
