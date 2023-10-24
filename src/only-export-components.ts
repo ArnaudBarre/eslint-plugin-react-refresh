@@ -126,7 +126,16 @@ export const onlyExportComponents: TSESLint.RuleModule<
               handleExportIdentifier(node.id, true);
             }
           } else if (node.type === "CallExpression") {
-            context.report({ messageId: "anonymousExport", node });
+            if (
+              node.callee.type === "Identifier" &&
+              reactHOCs.includes(node.callee.name) &&
+              node.arguments[0]?.type === "FunctionExpression" &&
+              node.arguments[0].id
+            ) {
+              handleExportIdentifier(node.arguments[0].id, true);
+            } else {
+              context.report({ messageId: "anonymousExport", node });
+            }
           } else if (node.type === "TSEnumDeclaration") {
             nonComponentExports.push(node.id);
           }
@@ -196,12 +205,13 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
 };
 
+const reactHOCs = ["memo", "forwardRef"];
 const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
   if (!init) return false;
   if (init.type === "ArrowFunctionExpression") return true;
   if (init.type === "CallExpression") {
     if (init.callee.type === "Identifier") {
-      return ["memo", "forwardRef"].includes(init.callee.name);
+      return reactHOCs.includes(init.callee.name);
     }
   }
   return false;

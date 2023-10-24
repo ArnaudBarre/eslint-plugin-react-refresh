@@ -82,6 +82,10 @@ const valid = [
     code: "export default function foo () {};",
   },
   {
+    name: "export default memo function",
+    code: "export default memo(function Foo () {});",
+  },
+  {
     name: "export type *",
     code: "export type * from './module';",
     filename: "Test.tsx",
@@ -144,6 +148,11 @@ const invalid = [
   {
     name: "Export default anonymous AF",
     code: "export default () => {};",
+    errorId: "anonymousExport",
+  },
+  {
+    name: "export default anonymous memo AF",
+    code: "export default memo(() => {});",
     errorId: "anonymousExport",
   },
   {

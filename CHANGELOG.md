@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Support memo default export function components (fixes #27)
+
 ## 0.4.3
 
 - Add warning for TS enums exports
