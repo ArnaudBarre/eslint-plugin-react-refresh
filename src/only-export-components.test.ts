@@ -136,6 +136,11 @@ const invalid = [
     errorId: "namedExport",
   },
   {
+    name: "Component and PascalCase variable",
+    code: "export function Component() {}; export const Aa = 'a'",
+    errorId: "namedExport",
+  },
+  {
     name: "Component and variable",
     code: "const foo = 4; const Bar = () => {}; export { foo, Bar };",
     errorId: "namedExport",

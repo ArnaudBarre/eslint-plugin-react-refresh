@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Support memo default export function components (fixes #27)
+- Warn on export expressions that are not React component (array, object, logical expression, ...) (fixes #26)
 
 ## 0.4.3
 

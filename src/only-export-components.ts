@@ -87,12 +87,6 @@ export const onlyExportComponents: TSESLint.RuleModule<
             return;
           }
           if (
-            !mayHaveReactExport &&
-            possibleReactExportRE.test(identifierNode.name)
-          ) {
-            mayHaveReactExport = true;
-          }
-          if (
             allowConstantExport &&
             init &&
             (init.type === "Literal" ||
@@ -101,12 +95,30 @@ export const onlyExportComponents: TSESLint.RuleModule<
           ) {
             return;
           }
-          if (
-            !(isFunction ? possibleReactExportRE : strictReactExportRE).test(
-              identifierNode.name,
-            )
-          ) {
-            nonComponentExports.push(identifierNode);
+          if (isFunction) {
+            if (possibleReactExportRE.test(identifierNode.name)) {
+              mayHaveReactExport = true;
+            } else {
+              nonComponentExports.push(identifierNode);
+            }
+          } else {
+            if (
+              init &&
+              // Switch to allowList?
+              notReactComponentExpression.includes(init.type)
+            ) {
+              nonComponentExports.push(identifierNode);
+              return;
+            }
+            if (
+              !mayHaveReactExport &&
+              possibleReactExportRE.test(identifierNode.name)
+            ) {
+              mayHaveReactExport = true;
+            }
+            if (!strictReactExportRE.test(identifierNode.name)) {
+              nonComponentExports.push(identifierNode);
+            }
           }
         };
 
@@ -216,3 +228,20 @@ const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
   }
   return false;
 };
+
+type ToString<T> = T extends `${infer V}` ? V : never;
+const notReactComponentExpression: ToString<TSESTree.Expression["type"]>[] = [
+  "ArrayExpression",
+  "AwaitExpression",
+  "BinaryExpression",
+  "ChainExpression",
+  "ConditionalExpression",
+  "Literal",
+  "LogicalExpression",
+  "ObjectExpression",
+  "TaggedTemplateExpression",
+  "TemplateLiteral",
+  "ThisExpression",
+  "UnaryExpression",
+  "UpdateExpression",
+];
