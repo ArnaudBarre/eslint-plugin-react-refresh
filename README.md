@@ -83,6 +83,21 @@ createRoot(document.getElementById("root")).render(<App />);
 
 ## Options
 
+### allowExportNames <small>(v0.4.4)</small>
+
+If you use a framework that handles HMR of some specific exports, you can use this option to avoid warning for them.
+
+Example for [Remix](https://remix.run/docs/en/main/other-api/dev#:~:text=React%20Fast%20Refresh,-can%20only%20handle):
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "warn",
+    { "allowExportNames": ["meta", "links", "headers", "loader", "action"] }
+  ]
+}
+```
+
 ### allowConstantExport <small>(v0.4.0)</small>
 
 Don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.

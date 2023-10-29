@@ -116,6 +116,21 @@ const valid = [
     code: "const foo = 'world'; export const CONSTANT = `Hello ${foo}`; export const Foo = () => {};",
     options: [{ allowConstantExport: true }],
   },
+  {
+    name: "Component and allowed export",
+    code: "export const loader = () => {}; export const Bar = () => {};",
+    options: [{ allowExportNames: ["loader", "meta"] }],
+  },
+  {
+    name: "Component and allowed function export",
+    code: "export function loader() {}; export const Bar = () => {};",
+    options: [{ allowExportNames: ["loader", "meta"] }],
+  },
+  {
+    name: "Only allowed exports without component",
+    code: "export const loader = () => {}; export const meta = { title: 'Home' };",
+    options: [{ allowExportNames: ["loader", "meta"] }],
+  },
 ];
 
 const invalid = [
@@ -200,6 +215,12 @@ const invalid = [
     code: `export default compose()(MainView);`,
     filename: "Test.jsx",
     errorId: "anonymousExport",
+  },
+  {
+    name: "Component and export non in allowExportNames",
+    code: "export const loader = () => {}; export const Bar = () => {}; export const foo = () => {};",
+    options: [{ allowExportNames: ["loader", "meta"] }],
+    errorId: "namedExport",
   },
 ];
 

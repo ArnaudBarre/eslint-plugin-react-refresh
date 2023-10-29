@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.4.4
 
+- Add `allowExportNames` option (fixes #29)
 - Support memo default export function components (fixes #27)
 - Warn on export expressions that are not React component (array, object, logical expression, ...) (fixes #26)
 

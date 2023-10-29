@@ -14,7 +14,14 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | "anonymousExport"
   | "noExport"
   | "localComponents",
-  [] | [{ allowConstantExport?: boolean; checkJS?: boolean }]
+  | []
+  | [
+      {
+        allowConstantExport?: boolean;
+        checkJS?: boolean;
+        allowExportNames?: string[];
+      },
+    ]
 > = {
   meta: {
     messages: {
@@ -36,6 +43,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
         properties: {
           allowConstantExport: { type: "boolean" },
           checkJS: { type: "boolean" },
+          allowExportNames: { type: "array", items: { type: "string" } },
         },
         additionalProperties: false,
       },
@@ -43,8 +51,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
   defaultOptions: [],
   create: (context) => {
-    const { allowConstantExport = false, checkJS = false } =
-      context.options[0] || {};
+    const {
+      allowConstantExport = false,
+      checkJS = false,
+      allowExportNames,
+    } = context.options[0] || {};
     const filename = context.getFilename();
     // Skip tests & stories files
     if (
@@ -84,6 +95,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
         ) => {
           if (identifierNode.type !== "Identifier") {
             nonComponentExports.push(identifierNode);
+            return;
+          }
+          if (allowExportNames?.includes(identifierNode.name)) {
             return;
           }
           if (
