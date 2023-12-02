@@ -117,6 +117,7 @@ const valid = [
   },
   {
     name: "Component and template literal with allowConstantExport",
+    // eslint-disable-next-line no-template-curly-in-string
     code: "const foo = 'world'; export const CONSTANT = `Hello ${foo}`; export const Foo = () => {};",
     options: [{ allowConstantExport: true }],
   },
@@ -216,7 +217,7 @@ const invalid = [
   },
   {
     name: "export default compose",
-    code: `export default compose()(MainView);`,
+    code: "export default compose()(MainView);",
     filename: "Test.jsx",
     errorId: "anonymousExport",
   },
@@ -232,21 +233,21 @@ const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
   test(name, () => {
     ruleTester.run(
       "only-export-components",
-      // @ts-ignore Mismatch between typescript-eslint and eslint
+      // @ts-expect-error Mismatch between typescript-eslint and eslint
       onlyExportComponents,
       cases,
     );
   });
 };
 
-valid.forEach(({ name, code, filename, options = [] }) => {
+for (const { name, code, filename, options = [] } of valid) {
   it(name, {
     valid: [{ filename: filename ?? "Test.jsx", code, options }],
     invalid: [],
   });
-});
+}
 
-invalid.forEach(({ name, code, errorId, filename, options = [] }) => {
+for (const { name, code, errorId, filename, options = [] } of invalid) {
   it(name, {
     valid: [],
     invalid: [
@@ -258,4 +259,4 @@ invalid.forEach(({ name, code, errorId, filename, options = [] }) => {
       },
     ],
   });
-});
+}

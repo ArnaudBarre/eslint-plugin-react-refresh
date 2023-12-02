@@ -1,12 +1,12 @@
-import { TSESLint } from "@typescript-eslint/utils";
-import { TSESTree } from "@typescript-eslint/types";
+import type { TSESLint } from "@typescript-eslint/utils";
+import type { TSESTree } from "@typescript-eslint/types";
 
-const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/;
+const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/u;
 // Starts with uppercase and at least one lowercase
 // This can lead to some false positive (ex: `const CMS = () => <></>; export default CMS`)
 // But allow to catch `export const CONSTANT = 3`
 // and the false positive can be avoided with direct name export
-const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/;
+const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/u;
 
 export const onlyExportComponents: TSESLint.RuleModule<
   | "exportAll"
@@ -55,7 +55,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       allowConstantExport = false,
       checkJS = false,
       allowExportNames,
-    } = context.options[0] || {};
+    } = context.options[0] ?? {};
     const filename = context.getFilename();
     // Skip tests & stories files
     if (
@@ -97,9 +97,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             nonComponentExports.push(identifierNode);
             return;
           }
-          if (allowExportNames?.includes(identifierNode.name)) {
-            return;
-          }
+          if (allowExportNames?.includes(identifierNode.name)) return;
           if (
             allowConstantExport &&
             init &&
@@ -184,10 +182,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             if (node.declaration.type === "Identifier") {
               handleExportIdentifier(node.declaration);
             }
-            if (
-              node.declaration.type === "ArrowFunctionExpression" &&
-              !node.declaration.id
-            ) {
+            if (node.declaration.type === "ArrowFunctionExpression") {
               context.report({ messageId: "anonymousExport", node });
             }
           } else if (node.type === "ExportNamedDeclaration") {
@@ -202,16 +197,18 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "FunctionDeclaration") {
             handleLocalIdentifier(node.id);
-          } else if (node.type === "ImportDeclaration") {
-            if (node.source.value === "react") {
-              reactIsInScope = true;
-            }
+          } else if (
+            node.type === "ImportDeclaration" &&
+            node.source.value === "react"
+          ) {
+            reactIsInScope = true;
           }
         }
 
         if (checkJS && !reactIsInScope) return;
 
         if (hasExports) {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (mayHaveReactExport) {
             for (const node of nonComponentExports) {
               context.report({ messageId: "namedExport", node });
@@ -235,10 +232,8 @@ const reactHOCs = ["memo", "forwardRef"];
 const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
   if (!init) return false;
   if (init.type === "ArrowFunctionExpression") return true;
-  if (init.type === "CallExpression") {
-    if (init.callee.type === "Identifier") {
-      return reactHOCs.includes(init.callee.name);
-    }
+  if (init.type === "CallExpression" && init.callee.type === "Identifier") {
+    return reactHOCs.includes(init.callee.name);
   }
   return false;
 };
