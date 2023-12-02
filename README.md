@@ -30,6 +30,24 @@ npm i -D eslint-plugin-react-refresh
 }
 ```
 
+### Flat config
+
+```js
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  {
+    // in main config for TSX/JSX source files
+    plugins: {
+      "react-refresh": reactRefresh,
+    },
+    rules: {
+      "react-refresh/only-export-components": "warn",
+    },
+  },
+];
+```
+
 ## Fail
 
 ```jsx
