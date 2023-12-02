@@ -253,7 +253,6 @@ const notReactComponentExpression: ToString<TSESTree.Expression["type"]>[] = [
   "Literal",
   "LogicalExpression",
   "ObjectExpression",
-  "TaggedTemplateExpression",
   "TemplateLiteral",
   "ThisExpression",
   "UnaryExpression",

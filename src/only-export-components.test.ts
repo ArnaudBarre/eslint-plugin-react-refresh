@@ -66,6 +66,10 @@ const valid = [
     code: "const foo = () => {}; export const Bar = () => {}; export const Baz = () => {};",
   },
   {
+    name: "styled components",
+    code: "export const Foo = () => {}; export const Bar = styled.div`padding-bottom: 6px;`;",
+  },
+  {
     name: "Direct export variable",
     code: "export const foo = 3;",
   },

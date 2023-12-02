@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.5
+
+- Allow `TaggedTemplateExpression` for styled components (fixes #32)
+
 ## 0.4.4
 
 - Add `allowExportNames` option (fixes #29)
