@@ -61,6 +61,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
     if (
       filename.includes(".test.") ||
       filename.includes(".spec.") ||
+      filename.includes(".cy.") ||
       filename.includes(".stories.")
     ) {
       return {};
