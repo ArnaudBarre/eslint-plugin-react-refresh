@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.6
+
+- Ignore cypress test files (#39)
+
 ## 0.4.5
 
 - Allow `TaggedTemplateExpression` for styled components (fixes #32)
