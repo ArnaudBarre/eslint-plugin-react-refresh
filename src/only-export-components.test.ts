@@ -136,6 +136,10 @@ const valid = [
     code: "export const loader = () => {}; export const meta = { title: 'Home' };",
     options: [{ allowExportNames: ["loader", "meta"] }],
   },
+  {
+    name: "Export as default",
+    code: "export { App as default }; const App = () => <>Test</>;",
+  },
 ];
 
 const invalid = [

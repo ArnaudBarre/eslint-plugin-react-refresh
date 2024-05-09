@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "type": "module",
   "license": "MIT",
   "scripts": {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.7
+
+- Support `export { Component as default }` (fixes #41)
+
 ## 0.4.6
 
 - Ignore cypress test files (#39)

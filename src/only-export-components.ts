@@ -190,7 +190,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
             hasExports = true;
             if (node.declaration) handleExportDeclaration(node.declaration);
             for (const specifier of node.specifiers) {
-              handleExportIdentifier(specifier.exported);
+              handleExportIdentifier(
+                specifier.exported.name === "default"
+                  ? specifier.local
+                  : specifier.exported,
+              );
             }
           } else if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
