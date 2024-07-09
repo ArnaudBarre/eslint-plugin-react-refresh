@@ -102,9 +102,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
           if (
             allowConstantExport &&
             init &&
-            (init.type === "Literal" ||
-              init.type === "TemplateLiteral" ||
-              init.type === "BinaryExpression")
+            (init.type === "Literal" || // 1, "foo"
+              init.type === "UnaryExpression" || // -1
+              init.type === "TemplateLiteral" || // `Some ${template}`
+              init.type === "BinaryExpression") // 24 * 60
           ) {
             return;
           }

@@ -111,6 +111,11 @@ const valid = [
     options: [{ allowConstantExport: true }],
   },
   {
+    name: "Component and negative number constant with allowConstantExport",
+    code: "export const foo = -4; export const Bar = () => {};",
+    options: [{ allowConstantExport: true }],
+  },
+  {
     name: "Component and string constant with allowConstantExport",
     code: "export const CONSTANT = 'Hello world'; export const Foo = () => {};",
     options: [{ allowConstantExport: true }],
