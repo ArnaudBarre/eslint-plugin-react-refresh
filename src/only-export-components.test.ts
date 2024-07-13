@@ -94,6 +94,10 @@ const valid = [
     code: "const Foo = () => {}; export default memo(Foo);",
   },
   {
+    name: "export default memo function declaration",
+    code: "function Foo() {}; export default memo(Foo);",
+  },
+  {
     name: "export type *",
     code: "export type * from './module';",
     filename: "Test.tsx",
