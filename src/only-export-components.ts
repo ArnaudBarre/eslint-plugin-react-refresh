@@ -154,25 +154,45 @@ export const onlyExportComponents: TSESLint.RuleModule<
             } else {
               handleExportIdentifier(node.id, true);
             }
-
           } else if (node.type === "CallExpression") {
-            if (node.callee.type !== 'Identifier' || !reactHOCs.has(node.callee.name)) {
+            if (
+              node.callee.type !== "Identifier" ||
+              !reactHOCs.has(node.callee.name)
+            ) {
               // we rule out non HoC first
               context.report({ messageId: "anonymousExport", node });
-            } else if (node.arguments[0]?.type === "FunctionExpression" && node.arguments[0].id) {
+            } else if (
+              node.arguments[0]?.type === "FunctionExpression" &&
+              node.arguments[0].id
+            ) {
               // export default memo(function Foo() {})
               handleExportIdentifier(node.arguments[0].id, true);
-            } else if (node.arguments[0]?.type === "Identifier" && 'name' in node.arguments[0]) {
+            } else if (
+              node.arguments[0]?.type === "Identifier" &&
+              "name" in node.arguments[0]
+            ) {
               // const Foo = () => {}; export default memo(Foo);
               const argumentName = node.arguments[0].name;
               const scope = context.sourceCode.getScope?.(node);
               if (scope) {
-                const binding = scope.variables.find(v => v.name === argumentName);
+                const binding = scope.variables.find(
+                  (v) => v.name === argumentName,
+                );
                 if (binding) {
                   for (const def of binding.defs) {
-                    if (def.type === 'Variable' /* && def.node.type === 'VariableDeclarator' */) {
-                      handleExportIdentifier(def.node.id, canBeReactFunctionComponent(def.node.init), def.node.init);
-                    } else if (def.type === 'FunctionName' && def.node.type === 'FunctionDeclaration') {
+                    if (
+                      def.type ===
+                      "Variable" /* && def.node.type === 'VariableDeclarator' */
+                    ) {
+                      handleExportIdentifier(
+                        def.node.id,
+                        canBeReactFunctionComponent(def.node.init),
+                        def.node.init,
+                      );
+                    } else if (
+                      def.type === "FunctionName" &&
+                      def.node.type === "FunctionDeclaration"
+                    ) {
                       if (def.node.id) {
                         handleExportIdentifier(def.node.id, true);
                       } else {
@@ -269,7 +289,9 @@ const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
 };
 
 type ToString<T> = T extends `${infer V}` ? V : never;
-const notReactComponentExpression = new Set<ToString<TSESTree.Expression["type"]>>([
+const notReactComponentExpression = new Set<
+  ToString<TSESTree.Expression["type"]>
+>([
   "ArrayExpression",
   "AwaitExpression",
   "BinaryExpression",
