@@ -154,6 +154,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             } else {
               handleExportIdentifier(node.id, true);
             }
+
           } else if (node.type === "CallExpression") {
             if (node.callee.type !== 'Identifier' || !reactHOCs.has(node.callee.name)) {
               // we rule out non HoC first
@@ -169,8 +170,14 @@ export const onlyExportComponents: TSESLint.RuleModule<
                 const binding = scope.variables.find(v => v.name === argumentName);
                 if (binding) {
                   for (const def of binding.defs) {
-                    if (def.type === 'Variable' && def.node.type === 'VariableDeclarator') {
+                    if (def.type === 'Variable' /* && def.node.type === 'VariableDeclarator' */) {
                       handleExportIdentifier(def.node.id, canBeReactFunctionComponent(def.node.init), def.node.init);
+                    } else if (def.type === 'FunctionName' && def.node.type === 'FunctionDeclaration') {
+                      if (def.node.id) {
+                        handleExportIdentifier(def.node.id, true);
+                      } else {
+                        context.report({ messageId: "anonymousExport", node });
+                      }
                     }
                   }
                   // handleExportIdentifier(binding.identifiers[0], true);
