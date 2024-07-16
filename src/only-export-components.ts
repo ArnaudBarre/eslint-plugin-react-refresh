@@ -172,37 +172,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
               "name" in node.arguments[0]
             ) {
               // const Foo = () => {}; export default memo(Foo);
-              const argumentName = node.arguments[0].name;
-              const scope = context.sourceCode.getScope?.(node);
-              if (scope) {
-                const binding = scope.variables.find(
-                  (v) => v.name === argumentName,
-                );
-                if (binding) {
-                  for (const def of binding.defs) {
-                    if (
-                      def.type ===
-                      "Variable" /* && def.node.type === 'VariableDeclarator' */
-                    ) {
-                      handleExportIdentifier(
-                        def.node.id,
-                        canBeReactFunctionComponent(def.node.init),
-                        def.node.init,
-                      );
-                    } else if (
-                      def.type === "FunctionName" &&
-                      def.node.type === "FunctionDeclaration"
-                    ) {
-                      if (def.node.id) {
-                        handleExportIdentifier(def.node.id, true);
-                      } else {
-                        context.report({ messageId: "anonymousExport", node });
-                      }
-                    }
-                  }
-                  // handleExportIdentifier(binding.identifiers[0], true);
-                }
-              }
+              // do not check futher since identifier is most likely named
+
+              // We must have react exports since we are exporing return value of HoC
+              mayHaveReactExport = true;
             } else {
               context.report({ messageId: "anonymousExport", node });
             }
