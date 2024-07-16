@@ -72,7 +72,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       (checkJS && filename.endsWith(".js"));
     if (!shouldScan) return {};
 
-    const allowExportNamesSet = new Set(allowExportNames);
+    const allowExportNamesSet = allowExportNames ? new Set(allowExportNames) : undefined;
 
     return {
       Program(program) {
@@ -100,7 +100,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             nonComponentExports.push(identifierNode);
             return;
           }
-          if (allowExportNamesSet.has(identifierNode.name)) return;
+          if (allowExportNamesSet?.has(identifierNode.name)) return;
           if (
             allowConstantExport &&
             init &&
