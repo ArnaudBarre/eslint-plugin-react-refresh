@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.9
+
+- Support `function Foo() {}; export default memo(Foo)` (fixes #44)
+
 ## 0.4.8
 
 - Support `export const foo = -1` with `allowConstantExport` (fixes #43)

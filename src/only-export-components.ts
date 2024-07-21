@@ -72,7 +72,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
       (checkJS && filename.endsWith(".js"));
     if (!shouldScan) return {};
 
-    const allowExportNamesSet = allowExportNames ? new Set(allowExportNames) : undefined;
+    const allowExportNamesSet = allowExportNames
+      ? new Set(allowExportNames)
+      : undefined;
 
     return {
       Program(program) {
@@ -167,14 +169,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
             ) {
               // export default memo(function Foo() {})
               handleExportIdentifier(node.arguments[0].id, true);
-            } else if (
-              node.arguments[0]?.type === "Identifier" &&
-              "name" in node.arguments[0]
-            ) {
+            } else if (node.arguments[0]?.type === "Identifier") {
               // const Foo = () => {}; export default memo(Foo);
-              // do not check futher since identifier is most likely named
-
-              // We must have react exports since we are exporing return value of HoC
+              // No need to check further, the identifier has necessarily a named,
+              // and it would throw at runtime if it's not a React component.
+              // We have React exports since we are exporting return value of HoC
               mayHaveReactExport = true;
             } else {
               context.report({ messageId: "anonymousExport", node });
