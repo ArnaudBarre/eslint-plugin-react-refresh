@@ -72,6 +72,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
       (checkJS && filename.endsWith(".js"));
     if (!shouldScan) return {};
 
+    const allowExportNamesSet = allowExportNames
+      ? new Set(allowExportNames)
+      : undefined;
+
     return {
       Program(program) {
         let hasExports = false;
@@ -98,7 +102,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             nonComponentExports.push(identifierNode);
             return;
           }
-          if (allowExportNames?.includes(identifierNode.name)) return;
+          if (allowExportNamesSet?.has(identifierNode.name)) return;
           if (
             allowConstantExport &&
             init &&
@@ -109,6 +113,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           ) {
             return;
           }
+
           if (isFunction) {
             if (possibleReactExportRE.test(identifierNode.name)) {
               mayHaveReactExport = true;
@@ -119,7 +124,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             if (
               init &&
               // Switch to allowList?
-              notReactComponentExpression.includes(init.type)
+              notReactComponentExpression.has(init.type)
             ) {
               nonComponentExports.push(identifierNode);
               return;
@@ -153,12 +158,23 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "CallExpression") {
             if (
-              node.callee.type === "Identifier" &&
-              reactHOCs.includes(node.callee.name) &&
+              node.callee.type !== "Identifier" ||
+              !reactHOCs.has(node.callee.name)
+            ) {
+              // we rule out non HoC first
+              context.report({ messageId: "anonymousExport", node });
+            } else if (
               node.arguments[0]?.type === "FunctionExpression" &&
               node.arguments[0].id
             ) {
+              // export default memo(function Foo() {})
               handleExportIdentifier(node.arguments[0].id, true);
+            } else if (node.arguments[0]?.type === "Identifier") {
+              // const Foo = () => {}; export default memo(Foo);
+              // No need to check further, the identifier has necessarily a named,
+              // and it would throw at runtime if it's not a React component.
+              // We have React exports since we are exporting return value of HoC
+              mayHaveReactExport = true;
             } else {
               context.report({ messageId: "anonymousExport", node });
             }
@@ -234,18 +250,20 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
 };
 
-const reactHOCs = ["memo", "forwardRef"];
+const reactHOCs = new Set(["memo", "forwardRef"]);
 const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
   if (!init) return false;
   if (init.type === "ArrowFunctionExpression") return true;
   if (init.type === "CallExpression" && init.callee.type === "Identifier") {
-    return reactHOCs.includes(init.callee.name);
+    return reactHOCs.has(init.callee.name);
   }
   return false;
 };
 
 type ToString<T> = T extends `${infer V}` ? V : never;
-const notReactComponentExpression: ToString<TSESTree.Expression["type"]>[] = [
+const notReactComponentExpression = new Set<
+  ToString<TSESTree.Expression["type"]>
+>([
   "ArrayExpression",
   "AwaitExpression",
   "BinaryExpression",
@@ -258,4 +276,4 @@ const notReactComponentExpression: ToString<TSESTree.Expression["type"]>[] = [
   "ThisExpression",
   "UnaryExpression",
   "UpdateExpression",
-];
+]);
