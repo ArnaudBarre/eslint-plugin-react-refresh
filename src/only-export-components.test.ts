@@ -90,12 +90,24 @@ const valid = [
     code: "export default memo(function Foo () {});",
   },
   {
+    name: "export default React.memo function",
+    code: "export default React.memo(function Foo () {});",
+  },
+  {
     name: "export default memo function assignment",
     code: "const Foo = () => {}; export default memo(Foo);",
   },
   {
+    name: "export default React.memo function assignment",
+    code: "const Foo = () => {}; export default React.memo(Foo);",
+  },
+  {
     name: "export default memo function declaration",
     code: "function Foo() {}; export default memo(Foo);",
+  },
+  {
+    name: "export default React.memo function declaration",
+    code: "function Foo() {}; export default React.memo(Foo);",
   },
   {
     name: "export type *",
