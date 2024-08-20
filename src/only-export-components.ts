@@ -16,12 +16,12 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | "localComponents",
   | []
   | [
-    {
-      allowConstantExport?: boolean;
-      checkJS?: boolean;
-      allowExportNames?: string[];
-    },
-  ]
+      {
+        allowConstantExport?: boolean;
+        checkJS?: boolean;
+        allowExportNames?: string[];
+      },
+    ]
 > = {
   meta: {
     messages: {
@@ -161,7 +161,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
             if (node.callee.type !== "Identifier") {
               // export default React.memo(function Foo() {})
               // export default Preact.memo(function Foo() {})
-              if (node.callee.type === "MemberExpression" && node.callee.property.type === "Identifier" && reactHOCs.has(node.callee.property.name)) {
+              if (
+                node.callee.type === "MemberExpression" &&
+                node.callee.property.type === "Identifier" &&
+                reactHOCs.has(node.callee.property.name)
+              ) {
                 mayHaveReactExport = true;
               } else {
                 context.report({ messageId: "anonymousExport", node });
