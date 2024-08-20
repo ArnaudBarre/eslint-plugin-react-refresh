@@ -157,10 +157,20 @@ export const onlyExportComponents: TSESLint.RuleModule<
               handleExportIdentifier(node.id, true);
             }
           } else if (node.type === "CallExpression") {
-            if (
-              node.callee.type !== "Identifier" ||
-              !reactHOCs.has(node.callee.name)
-            ) {
+            // we rule out non HoC first
+            if (node.callee.type !== "Identifier") {
+              // export default React.memo(function Foo() {})
+              // export default Preact.memo(function Foo() {})
+              if (
+                node.callee.type === "MemberExpression" &&
+                node.callee.property.type === "Identifier" &&
+                reactHOCs.has(node.callee.property.name)
+              ) {
+                mayHaveReactExport = true;
+              } else {
+                context.report({ messageId: "anonymousExport", node });
+              }
+            } else if (!reactHOCs.has(node.callee.name)) {
               // we rule out non HoC first
               context.report({ messageId: "anonymousExport", node });
             } else if (

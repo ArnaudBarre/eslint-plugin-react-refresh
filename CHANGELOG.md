@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.4.10
+
+- Support `function Foo() {}; export default React.memo(Foo)` (#46) (thanks @SukkaW!)
+
 ## 0.4.9
 
-- Support `function Foo() {}; export default memo(Foo)` (fixes #44)
+- Support `function Foo() {}; export default memo(Foo)` (fixes #44) (thanks @SukkaW!)
 
 ## 0.4.8
 
