@@ -1,10 +1,11 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",
+    "test": "bun test",
     "lint": "bun lint-ci --fix --cache",
     "lint-ci": "eslint ./ --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prettier": "bun prettier-ci --write",

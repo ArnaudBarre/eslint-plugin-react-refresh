@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.11
+
+- Ignore type exports (ex. `export type foo = string;`) (fixes #47)
+
 ## 0.4.10
 
 - Support `function Foo() {}; export default React.memo(Foo)` (#46) (thanks @SukkaW!)

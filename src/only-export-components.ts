@@ -214,6 +214,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
               context.report({ messageId: "anonymousExport", node });
             }
           } else if (node.type === "ExportNamedDeclaration") {
+            if (node.exportKind === "type") continue;
             hasExports = true;
             if (node.declaration) handleExportDeclaration(node.declaration);
             for (const specifier of node.specifiers) {

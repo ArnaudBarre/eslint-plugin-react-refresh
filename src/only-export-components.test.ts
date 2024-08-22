@@ -115,6 +115,16 @@ const valid = [
     filename: "Test.tsx",
   },
   {
+    name: "export type { foo }",
+    code: "type foo = string; export const Foo = () => null; export type { foo };",
+    filename: "Test.tsx",
+  },
+  {
+    name: "export type foo",
+    code: "export type foo = string; export const Foo = () => null;",
+    filename: "Test.tsx",
+  },
+  {
     name: "Mixed export in JS without checkJS",
     code: "export const foo = () => {}; export const Bar = () => {};",
     filename: "Test.js",
