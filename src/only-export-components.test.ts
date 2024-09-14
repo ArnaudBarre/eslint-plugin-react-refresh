@@ -110,6 +110,10 @@ const valid = [
     code: "function Foo() {}; export default React.memo(Foo);",
   },
   {
+    name: "export default React.memo function declaration with type assertion",
+    code: "function Foo() {}; export default React.memo(Foo) as typeof Foo;",
+  },
+  {
     name: "export type *",
     code: "export type * from './module';",
     filename: "Test.tsx",

@@ -200,17 +200,22 @@ export const onlyExportComponents: TSESLint.RuleModule<
             context.report({ messageId: "exportAll", node });
           } else if (node.type === "ExportDefaultDeclaration") {
             hasExports = true;
+            const declaration =
+              node.declaration.type === "TSAsExpression" ||
+              node.declaration.type === "TSSatisfiesExpression"
+                ? node.declaration.expression
+                : node.declaration;
             if (
-              node.declaration.type === "VariableDeclaration" ||
-              node.declaration.type === "FunctionDeclaration" ||
-              node.declaration.type === "CallExpression"
+              declaration.type === "VariableDeclaration" ||
+              declaration.type === "FunctionDeclaration" ||
+              declaration.type === "CallExpression"
             ) {
-              handleExportDeclaration(node.declaration);
+              handleExportDeclaration(declaration);
             }
-            if (node.declaration.type === "Identifier") {
-              handleExportIdentifier(node.declaration);
+            if (declaration.type === "Identifier") {
+              handleExportIdentifier(declaration);
             }
-            if (node.declaration.type === "ArrowFunctionExpression") {
+            if (declaration.type === "ArrowFunctionExpression") {
               context.report({ messageId: "anonymousExport", node });
             }
           } else if (node.type === "ExportNamedDeclaration") {
