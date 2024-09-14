@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add default export to fix usage with jiti (fixes #50)
+
 ## 0.4.11
 
 - Ignore type exports (ex. `export type foo = string;`) (fixes #47)
