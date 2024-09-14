@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.0.12
+## 0.4.12
 
 - Support type assertion on default export (fixes #48)
 - Add default export to fix usage with jiti (fixes #50)
