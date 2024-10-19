@@ -82,7 +82,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
         let mayHaveReactExport = false;
         let reactIsInScope = false;
         const localComponents: TSESTree.Identifier[] = [];
-        const nonComponentExports: TSESTree.BindingName[] = [];
+        const nonComponentExports: (
+          | TSESTree.BindingName
+          | TSESTree.StringLiteral
+        )[] = [];
 
         const handleLocalIdentifier = (
           identifierNode: TSESTree.BindingName,
@@ -94,7 +97,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
         };
 
         const handleExportIdentifier = (
-          identifierNode: TSESTree.BindingName,
+          identifierNode: TSESTree.BindingName | TSESTree.StringLiteral,
           isFunction?: boolean,
           init?: TSESTree.Expression | null,
         ) => {
@@ -232,7 +235,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
             if (node.declaration) handleExportDeclaration(node.declaration);
             for (const specifier of node.specifiers) {
               handleExportIdentifier(
-                specifier.exported.name === "default"
+                specifier.exported.type === "Identifier" &&
+                  specifier.exported.name === "default"
                   ? specifier.local
                   : specifier.exported,
               );

@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.13
 
 - Support for `react-redux` connect (`export default connect(mapStateToProps, mapDispatchToProps)(MyComponent)`) (fixes #51)
+- Support for [Arbitrary Module Identifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-5-6/#support-for-arbitrary-module-identifiers) syntax (fixes #52)
 
 ## 0.4.12
 

@@ -1,14 +1,14 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",
     "test": "bun test",
-    "lint": "eslint ./ --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "bun --bun eslint . --max-warnings 0",
     "prettier": "bun prettier-ci --write",
-    "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{ts,json,md,yml}'",
+    "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{js,ts,json,md,yml}'",
     "ci": "tsc && bun lint && bun prettier-ci && bun test && bun run build"
   },
   "prettier": {},
@@ -16,15 +16,15 @@
     "eslint": ">=7"
   },
   "devDependencies": {
-    "@arnaud-barre/eslint-config": "^4.1.1",
+    "@arnaud-barre/eslint-config": "^5.0.1",
     "@arnaud-barre/tnode": "^0.19.2",
-    "@types/eslint": "^8.44.8",
-    "@types/node": "^20.10.2",
-    "@typescript-eslint/parser": "^7.18.0",
-    "@typescript-eslint/utils": "^7.18.0",
-    "bun-types": "^1.1.27",
-    "eslint": "^8.57.0",
+    "@types/eslint": "^9.6.1",
+    "@types/node": "^20.16.13",
+    "@typescript-eslint/parser": "^8.10.0",
+    "@typescript-eslint/utils": "^8.10.0",
+    "bun-types": "^1.1.31",
+    "eslint": "^9.13.0",
     "prettier": "3.0.3",
-    "typescript": "~5.4"
+    "typescript": "~5.6"
   }
 }

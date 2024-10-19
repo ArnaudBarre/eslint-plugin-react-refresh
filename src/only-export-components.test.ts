@@ -1,16 +1,10 @@
 #!/usr/bin/env tnode
 import { test } from "bun:test";
+import parser from "@typescript-eslint/parser";
 import { RuleTester } from "eslint";
 import { onlyExportComponents } from "./only-export-components.ts";
 
-const ruleTester = new RuleTester({
-  parser: require.resolve("@typescript-eslint/parser"),
-  parserOptions: {
-    sourceType: "module",
-    ecmaVersion: 2022,
-    ecmaFeatures: { jsx: true },
-  },
-});
+const ruleTester = new RuleTester({ languageOptions: { parser } });
 
 const valid = [
   {
@@ -273,6 +267,11 @@ const invalid = [
     code: "export const loader = () => {}; export const Bar = () => {}; export const foo = () => {};",
     options: [{ allowExportNames: ["loader", "meta"] }],
     errorId: "namedExport",
+  },
+  {
+    name: "Export with arbitrary module identifier",
+    code: 'const Foo = () => {}; export { Foo as "🍌"}',
+    errorId: "localComponents",
   },
 ];
 
