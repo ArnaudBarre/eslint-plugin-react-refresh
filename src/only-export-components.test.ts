@@ -179,6 +179,10 @@ const valid = [
     name: "Export as default",
     code: "export { App as default }; const App = () => <>Test</>;",
   },
+  {
+    name: "Allow connect from react-redux",
+    code: "const MyComponent = () => {}; export default connect(() => ({}))(MyComponent);",
+  },
 ];
 
 const invalid = [

@@ -157,8 +157,16 @@ export const onlyExportComponents: TSESLint.RuleModule<
               handleExportIdentifier(node.id, true);
             }
           } else if (node.type === "CallExpression") {
-            // we rule out non HoC first
-            if (node.callee.type !== "Identifier") {
+            if (
+              node.callee.type === "CallExpression" &&
+              node.callee.callee.type === "Identifier" &&
+              node.callee.callee.name === "connect"
+            ) {
+              // support for react-redux
+              // export default connect(mapStateToProps, mapDispatchToProps)(Comp)
+              mayHaveReactExport = true;
+            } else if (node.callee.type !== "Identifier") {
+              // we rule out non HoC first
               // export default React.memo(function Foo() {})
               // export default Preact.memo(function Foo() {})
               if (

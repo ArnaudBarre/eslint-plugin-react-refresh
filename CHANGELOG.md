@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Support for `react-redux` connect (`export default connect(mapStateToProps, mapDispatchToProps)(MyComponent)`) (fixes #51)
+
 ## 0.4.12
 
 - Support type assertion on default export (fixes #48)
