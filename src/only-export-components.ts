@@ -13,7 +13,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | "namedExport"
   | "anonymousExport"
   | "noExport"
-  | "localComponents",
+  | "localComponents"
+  | "reactContext",
   | []
   | [
       {
@@ -35,6 +36,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
         "Fast refresh only works when a file only exports components. Move your component(s) to a separate file.",
       noExport:
         "Fast refresh only works when a file has exports. Move your component(s) to a separate file.",
+      reactContext:
+        "Fast refresh only works when a file only exports components. Move your React context(s) to a separate file.",
     },
     type: "problem",
     schema: [
@@ -56,7 +59,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       checkJS = false,
       allowExportNames,
     } = context.options[0] ?? {};
-    const filename = context.getFilename();
+    const filename = context.filename;
     // Skip tests & stories files
     if (
       filename.includes(".test.") ||
@@ -86,6 +89,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           | TSESTree.BindingName
           | TSESTree.StringLiteral
         )[] = [];
+        const reactContextExports: TSESTree.Identifier[] = [];
 
         const handleLocalIdentifier = (
           identifierNode: TSESTree.BindingName,
@@ -124,6 +128,15 @@ export const onlyExportComponents: TSESLint.RuleModule<
               nonComponentExports.push(identifierNode);
             }
           } else {
+            if (
+              init &&
+              init.type === "CallExpression" &&
+              init.callee.type === "Identifier" &&
+              init.callee.name === "createContext"
+            ) {
+              reactContextExports.push(identifierNode);
+              return;
+            }
             if (
               init &&
               // Switch to allowList?
@@ -262,6 +275,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
           if (mayHaveReactExport) {
             for (const node of nonComponentExports) {
               context.report({ messageId: "namedExport", node });
+            }
+            for (const node of reactContextExports) {
+              context.report({ messageId: "reactContext", node });
             }
           } else if (localComponents.length) {
             for (const node of localComponents) {

@@ -177,6 +177,18 @@ const valid = [
     name: "Allow connect from react-redux",
     code: "const MyComponent = () => {}; export default connect(() => ({}))(MyComponent);",
   },
+  {
+    name: "Two components, one of them with 'Context' in its name",
+    code: "export const MyComponent = () => {}; export const ChatContext = () => {};",
+  },
+  {
+    name: "Component & local React context",
+    code: "export const MyComponent = () => {}; const MyContext = createContext('test');",
+  },
+  {
+    name: "Only React context",
+    code: "export const MyContext = createContext('test');",
+  },
 ];
 
 const invalid = [
@@ -272,6 +284,11 @@ const invalid = [
     name: "Export with arbitrary module identifier",
     code: 'const Foo = () => {}; export { Foo as "🍌"}',
     errorId: "localComponents",
+  },
+  {
+    name: "Component and React Context",
+    code: "export const MyComponent = () => {}; export const MyContext = createContext('test');",
+    errorId: "reactContext",
   },
 ];
 
