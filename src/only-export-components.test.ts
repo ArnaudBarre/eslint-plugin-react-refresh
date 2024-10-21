@@ -186,7 +186,7 @@ const valid = [
     code: "export const MyComponent = () => {}; const MyContext = createContext('test');",
   },
   {
-    name: "Only React context (",
+    name: "Only React context",
     code: "export const MyContext = createContext('test');",
   },
 ];
