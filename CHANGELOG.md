@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.14
+
+- Warn if a context is exported alongside a component (fixes #53). Thanks @IgorAufricht!
+
 ## 0.4.13
 
 - Support for `react-redux` connect (`export default connect(mapStateToProps, mapDispatchToProps)(MyComponent)`) (fixes #51)

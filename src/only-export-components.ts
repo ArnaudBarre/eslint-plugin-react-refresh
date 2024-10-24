@@ -131,8 +131,12 @@ export const onlyExportComponents: TSESLint.RuleModule<
             if (
               init &&
               init.type === "CallExpression" &&
-              init.callee.type === "Identifier" &&
-              init.callee.name === "createContext"
+              // createContext || React.createContext
+              ((init.callee.type === "Identifier" &&
+                init.callee.name === "createContext") ||
+                (init.callee.type === "MemberExpression" &&
+                  init.callee.property.type === "Identifier" &&
+                  init.callee.property.name === "createContext"))
             ) {
               reactContextExports.push(identifierNode);
               return;

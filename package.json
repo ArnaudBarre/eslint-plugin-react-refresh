@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -16,7 +16,7 @@
     "eslint": ">=7"
   },
   "devDependencies": {
-    "@arnaud-barre/eslint-config": "^5.0.1",
+    "@arnaud-barre/eslint-config": "^5.1.0",
     "@arnaud-barre/tnode": "^0.19.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^20.16.13",

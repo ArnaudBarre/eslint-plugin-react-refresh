@@ -290,6 +290,11 @@ const invalid = [
     code: "export const MyComponent = () => {}; export const MyContext = createContext('test');",
     errorId: "reactContext",
   },
+  {
+    name: "Component and React Context with React import",
+    code: "export const MyComponent = () => {}; export const MyContext = React.createContext('test');",
+    errorId: "reactContext",
+  },
 ];
 
 const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
