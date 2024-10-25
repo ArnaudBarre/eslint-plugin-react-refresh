@@ -189,6 +189,21 @@ const valid = [
     name: "Only React context",
     code: "export const MyContext = createContext('test');",
   },
+  {
+    name: "Component and local React Context from other module",
+    code: "export const MyComponent = () => {}; const MyContext = createMyContext('test');",
+    errorId: "reactContext",
+    options: [
+      {
+        createContextMethods: ["createMyContext"],
+      },
+    ],
+  },
+  {
+    name: "Component and React Context from other module without options",
+    code: "export const MyComponent = () => {}; export const MyContext = createMyContext('test');",
+    errorId: "reactContext",
+  },
 ];
 
 const invalid = [
@@ -294,6 +309,16 @@ const invalid = [
     name: "Component and React Context with React import",
     code: "export const MyComponent = () => {}; export const MyContext = React.createContext('test');",
     errorId: "reactContext",
+  },
+  {
+    name: "Component and React Context from other module",
+    code: "export const MyComponent = () => {}; export const MyContext = createMyContext('test');",
+    errorId: "reactContext",
+    options: [
+      {
+        createContextMethods: ["createMyContext"],
+      },
+    ],
   },
 ];
 
