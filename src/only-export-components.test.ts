@@ -315,9 +315,7 @@ const invalid = [
     code: "export const MyComponent = () => {}; export const MyContext = createMyContext('test');",
     errorId: "reactContext",
     options: [
-      {
-        createContextMethods: ["createMyContext"],
-      },
+      { createContextMethods: ["createMyContext"] },
     ],
   },
 ];
