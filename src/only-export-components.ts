@@ -82,10 +82,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
       ? new Set(allowExportNames)
       : undefined;
 
-    const createContextMethodsSet = new Set([
+    const createContextMethods = [
       ...createContextMethods,
       "createContext",
-    ]);
+    ];
 
     return {
       Program(program) {
