@@ -190,19 +190,8 @@ const valid = [
     code: "export const MyContext = createContext('test');",
   },
   {
-    name: "Component and local React Context from other module",
-    code: "export const MyComponent = () => {}; const MyContext = createMyContext('test');",
-    errorId: "reactContext",
-    options: [
-      {
-        createContextMethods: ["createMyContext"],
-      },
-    ],
-  },
-  {
     name: "Component and React Context from other module without options",
     code: "export const MyComponent = () => {}; export const MyContext = createMyContext('test');",
-    errorId: "reactContext",
   },
 ];
 
