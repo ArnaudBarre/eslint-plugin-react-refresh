@@ -140,3 +140,16 @@ If your using JSX inside `.js` files (which I don't recommend because it forces 
   "react-refresh/only-export-components": ["warn", { "checkJS": true }]
 }
 ```
+
+### customHOCs
+
+If you're exporting a component wrapped in a custom HOC, you can use this option to avoid false positives.
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "warn", 
+    { "customHOCs": ["observer", "withAuth"] }
+  ]
+}
+```
