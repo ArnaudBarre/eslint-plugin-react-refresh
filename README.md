@@ -2,11 +2,18 @@
 
 Validate that your components can safely be updated with fast refresh.
 
-## Limitations
+## Explainer
 
-⚠️ To avoid false positive, by default this plugin is only applied on `tsx` & `jsx` files. See options to run on JS files. ⚠️
+"Fast refresh", also known as "hot reloading", is a feature in many modern bundlers.
+If you update some React component(s) on disk, then the bundler will know to update only the impacted parts of your page -- without a full page reload.
 
-The plugin rely on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there are some limitations:
+`eslint-plugin-react-refresh` enforces that your components are structured in a way that integrations such as [react-refresh](https://www.npmjs.com/package/react-refresh) expect.
+
+### Limitations
+
+⚠️ To avoid false positives, by default this plugin is only applied on `tsx` & `jsx` files. See [Options](#options) to run on JS files. ⚠️
+
+The plugin relies on naming conventions (i.e. use PascalCase for components, camelCase for util functions). This is why there are some limitations:
 
 - `export *` are not supported and will be reported as an error
 - Anonymous function are not supported (i.e `export default function() {}`)
@@ -21,16 +28,7 @@ npm i -D eslint-plugin-react-refresh
 
 ## Usage
 
-```json
-{
-  "plugins": ["react-refresh"],
-  "rules": {
-    "react-refresh/only-export-components": "warn"
-  }
-}
-```
-
-### Flat config
+This plugin provides a single rule, `react-refresh/only-export-components`.
 
 ```js
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -48,7 +46,22 @@ export default [
 ];
 ```
 
-## Fail
+### Legacy config
+
+```jsonc
+{
+  "plugins": ["react-refresh"],
+  "rules": {
+    "react-refresh/only-export-components": "warn"
+  }
+}
+```
+
+## Examples
+
+These examples are from enabling `react-refresh/only-exports-components`.
+
+### Fail
 
 ```jsx
 export const foo = () => {};
@@ -74,14 +87,7 @@ const App = () => {};
 createRoot(document.getElementById("root")).render(<App />);
 ```
 
-## Pass with allowConstantExport
-
-```jsx
-export const CONSTANT = 3;
-export const Foo = () => <></>;
-```
-
-## Pass
+### Pass
 
 ```jsx
 export default function Foo() {
@@ -101,11 +107,29 @@ createRoot(document.getElementById("root")).render(<App />);
 
 ## Options
 
+These options are all present on `react-refresh/only-exports-components`.
+
+```ts
+interface Options {
+  allowExportNames?: string[];
+  allowConstantExport?: boolean;
+  checkJS?: boolean;
+}
+
+const defaultOptions: Options = {
+  allowExportNames: [],
+  allowConstantExport: false,
+  checkJS: false,
+};
+```
+
 ### allowExportNames <small>(v0.4.4)</small>
+
+> Default: `[]`
 
 If you use a framework that handles HMR of some specific exports, you can use this option to avoid warning for them.
 
-Example for [Remix](https://remix.run/docs/en/main/other-api/dev#:~:text=React%20Fast%20Refresh,-can%20only%20handle):
+Example for [Remix](https://remix.run/docs/en/main/discussion/hot-module-replacement#supported-exports):
 
 ```json
 {
@@ -117,6 +141,8 @@ Example for [Remix](https://remix.run/docs/en/main/other-api/dev#:~:text=React%2
 ```
 
 ### allowConstantExport <small>(v0.4.0)</small>
+
+> Default: `false`
 
 Don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.
 
@@ -131,7 +157,16 @@ This should be enabled if the fast refresh implementation correctly handles this
 }
 ```
 
+Enabling this option allows code such as the following:
+
+```jsx
+export const CONSTANT = 3;
+export const Foo = () => <></>;
+```
+
 ### checkJS <small>(v0.3.3)</small>
+
+> Default: `false`
 
 If your using JSX inside `.js` files (which I don't recommend because it forces you to configure every tool you use to switch the parser), you can still use the plugin by enabling this option. To reduce the number of false positive, only files importing `react` are checked.
 
