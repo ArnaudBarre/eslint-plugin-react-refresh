@@ -120,7 +120,7 @@ const defaultOptions: Options = {
   allowExportNames: [],
   allowConstantExport: false,
   checkJS: false,
-}
+};
 ```
 
 ### allowExportNames <small>(v0.4.4)</small>
@@ -129,7 +129,7 @@ const defaultOptions: Options = {
 
 If you use a framework that handles HMR of some specific exports, you can use this option to avoid warning for them.
 
-Example for [Remix](https://remix.run/docs/en/main/other-api/dev#:~:text=React%20Fast%20Refresh,-can%20only%20handle):
+Example for [Remix](https://remix.run/docs/en/main/discussion/hot-module-replacement#supported-exports):
 
 ```json
 {
