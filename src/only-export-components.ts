@@ -21,6 +21,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
         allowConstantExport?: boolean;
         checkJS?: boolean;
         allowExportNames?: string[];
+        createContextMethods?: string[];
       },
     ]
 > = {
@@ -47,6 +48,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           allowConstantExport: { type: "boolean" },
           checkJS: { type: "boolean" },
           allowExportNames: { type: "array", items: { type: "string" } },
+          createContextMethods: { type: "array", items: { type: "string" } },
         },
         additionalProperties: false,
       },
@@ -58,6 +60,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       allowConstantExport = false,
       checkJS = false,
       allowExportNames,
+      createContextMethods = [],
     } = context.options[0] ?? {};
     const filename = context.filename;
     // Skip tests & stories files
@@ -78,6 +81,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
     const allowExportNamesSet = allowExportNames
       ? new Set(allowExportNames)
       : undefined;
+
+    const createContextMethods = [
+      ...createContextMethods,
+      "createContext",
+    ];
 
     return {
       Program(program) {
@@ -133,10 +141,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
               init.type === "CallExpression" &&
               // createContext || React.createContext
               ((init.callee.type === "Identifier" &&
-                init.callee.name === "createContext") ||
+                createContextMethodsSet.has(init.callee.name)) ||
                 (init.callee.type === "MemberExpression" &&
                   init.callee.property.type === "Identifier" &&
-                  init.callee.property.name === "createContext"))
+                  createContextMethodsSet.has(init.callee.property.name)))
             ) {
               reactContextExports.push(identifierNode);
               return;

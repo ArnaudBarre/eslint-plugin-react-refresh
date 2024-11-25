@@ -175,3 +175,22 @@ If your using JSX inside `.js` files (which I don't recommend because it forces 
   "react-refresh/only-export-components": ["warn", { "checkJS": true }]
 }
 ```
+
+### createContextMethods
+
+The `createContextMethods` option allows you to specify custom context-creating functions for detection by the rule. By default, it only detects `createContext`, but you can add methods like `createMyContext` in your configuration.
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "error",
+    { "createContextMethods": ["createMyContext"] }
+  ]
+}
+```
+
+```jsx
+export const MyComponent = () => <div />;
+// ESLint error
+export const MyContext = createMyContext();
+```
