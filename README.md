@@ -40,7 +40,7 @@ export default [
       "react-refresh": reactRefresh,
     },
     rules: {
-      "react-refresh/only-export-components": "warn",
+      "react-refresh/only-export-components": "error",
     },
   },
 ];
@@ -52,7 +52,7 @@ export default [
 {
   "plugins": ["react-refresh"],
   "rules": {
-    "react-refresh/only-export-components": "warn"
+    "react-refresh/only-export-components": "error"
   }
 }
 ```
@@ -134,7 +134,7 @@ Example for [Remix](https://remix.run/docs/en/main/discussion/hot-module-replace
 ```json
 {
   "react-refresh/only-export-components": [
-    "warn",
+    "error",
     { "allowExportNames": ["meta", "links", "headers", "loader", "action"] }
   ]
 }
@@ -151,7 +151,7 @@ This should be enabled if the fast refresh implementation correctly handles this
 ```json
 {
   "react-refresh/only-export-components": [
-    "warn",
+    "error",
     { "allowConstantExport": true }
   ]
 }
@@ -172,6 +172,6 @@ If your using JSX inside `.js` files (which I don't recommend because it forces 
 
 ```json
 {
-  "react-refresh/only-export-components": ["warn", { "checkJS": true }]
+  "react-refresh/only-export-components": ["error", { "checkJS": true }]
 }
 ```
