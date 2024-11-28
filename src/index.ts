@@ -1,7 +1,26 @@
 import { onlyExportComponents } from "./only-export-components.ts";
 
-export const rules = {
-  "only-export-components": onlyExportComponents,
+const plugin = {
+  rules: {
+    "only-export-components": onlyExportComponents,
+  },
 };
-// eslint-disable-next-line @arnaud-barre/no-default-export
-export default { rules };
+
+export default {
+  rules: plugin.rules,
+  configs: {
+    recommended: {
+      plugins: { "react-refresh": plugin },
+      rules: { "react-refresh/only-export-components": "error" },
+    },
+    vite: {
+      plugins: { "react-refresh": plugin },
+      rules: {
+        "react-refresh/only-export-components": [
+          "error",
+          { allowConstantExport: true },
+        ],
+      },
+    },
+  },
+};

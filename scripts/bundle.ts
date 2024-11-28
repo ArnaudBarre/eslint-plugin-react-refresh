@@ -17,6 +17,7 @@ await build({
 });
 
 execSync("cp LICENSE README.md dist/");
+execSync("cp src/types.ts dist/index.d.ts");
 
 writeFileSync(
   "dist/package.json",
@@ -26,10 +27,12 @@ writeFileSync(
       description:
         "Validate that your components can safely be updated with Fast Refresh",
       version: packageJSON.version,
+      type: "commonjs",
       author: "Arnaud Barré (https://github.com/ArnaudBarre)",
       license: packageJSON.license,
       repository: "github:ArnaudBarre/eslint-plugin-react-refresh",
       main: "index.js",
+      types: "index.d.ts",
       keywords: [
         "eslint",
         "eslint-plugin",
