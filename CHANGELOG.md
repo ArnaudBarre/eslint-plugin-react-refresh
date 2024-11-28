@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Add support for custom HOCs (#60)
+
+By default, the rule only knows that `memo` & `forwardRef` function calls with return a React component. With this option, you can also allow extra function names like Mobx observer to make this code valid:
+
+```tsx
+const Foo = () => <></>;
+export default observer(Foo);
+```
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "error",
+    { "customHOCs": ["observer"] }
+  ]
+}
+```
+
+Thanks @HorusGoul!
+
 ## 0.4.14
 
 - Warn if a context is exported alongside a component (fixes #53). Thanks @IgorAufricht!

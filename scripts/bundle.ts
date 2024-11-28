@@ -24,7 +24,7 @@ writeFileSync(
     {
       name: packageJSON.name,
       description:
-        "Validate that your components can safely be updated with fast refresh",
+        "Validate that your components can safely be updated with Fast Refresh",
       version: packageJSON.version,
       author: "Arnaud Barré (https://github.com/ArnaudBarre)",
       license: packageJSON.license,

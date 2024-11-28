@@ -112,13 +112,16 @@ These options are all present on `react-refresh/only-exports-components`.
 ```ts
 interface Options {
   allowExportNames?: string[];
+  allowExportNames?: string[];
   allowConstantExport?: boolean;
+  customHOCs?: string[];
   checkJS?: boolean;
 }
 
 const defaultOptions: Options = {
   allowExportNames: [],
   allowConstantExport: false,
+  customHOCs: [],
   checkJS: false,
 };
 ```

@@ -1,12 +1,7 @@
 import type { TSESLint } from "@typescript-eslint/utils";
 import type { TSESTree } from "@typescript-eslint/types";
 
-const possibleReactExportRE = /^[A-Z][a-zA-Z0-9]*$/u;
-// Starts with uppercase and at least one lowercase
-// This can lead to some false positive (ex: `const CMS = () => <></>; export default CMS`)
-// But allow to catch `export const CONSTANT = 3`
-// and the false positive can be avoided with direct name export
-const strictReactExportRE = /^[A-Z][a-zA-Z0-9]*[a-z]+[a-zA-Z0-9]*$/u;
+const reactComponentNameRE = /^[A-Z][a-zA-Z0-9]*$/u;
 
 export const onlyExportComponents: TSESLint.RuleModule<
   | "exportAll"
@@ -18,10 +13,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | []
   | [
       {
-        allowConstantExport?: boolean;
-        checkJS?: boolean;
         allowExportNames?: string[];
+        allowConstantExport?: boolean;
         customHOCs?: string[];
+        checkJS?: boolean;
       },
     ]
 > = {
@@ -45,10 +40,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
       {
         type: "object",
         properties: {
-          allowConstantExport: { type: "boolean" },
-          checkJS: { type: "boolean" },
           allowExportNames: { type: "array", items: { type: "string" } },
+          allowConstantExport: { type: "boolean" },
           customHOCs: { type: "array", items: { type: "string" } },
+          checkJS: { type: "boolean" },
         },
         additionalProperties: false,
       },
@@ -57,10 +52,10 @@ export const onlyExportComponents: TSESLint.RuleModule<
   defaultOptions: [],
   create: (context) => {
     const {
-      allowConstantExport = false,
-      checkJS = false,
       allowExportNames,
+      allowConstantExport = false,
       customHOCs = [],
+      checkJS = false,
     } = context.options[0] ?? {};
     const filename = context.filename;
     // Skip tests & stories files
@@ -82,12 +77,12 @@ export const onlyExportComponents: TSESLint.RuleModule<
       ? new Set(allowExportNames)
       : undefined;
 
-    const reactHOCs = new Set(["memo", "forwardRef", ...customHOCs]);
+    const reactHOCs = ["memo", "forwardRef", ...customHOCs];
     const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
       if (!init) return false;
       if (init.type === "ArrowFunctionExpression") return true;
       if (init.type === "CallExpression" && init.callee.type === "Identifier") {
-        return reactHOCs.has(init.callee.name);
+        return reactHOCs.includes(init.callee.name);
       }
       return false;
     };
@@ -95,7 +90,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
     return {
       Program(program) {
         let hasExports = false;
-        let mayHaveReactExport = false;
+        let hasReactExport = false;
         let reactIsInScope = false;
         const localComponents: TSESTree.Identifier[] = [];
         const nonComponentExports: (
@@ -108,7 +103,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           identifierNode: TSESTree.BindingName,
         ) => {
           if (identifierNode.type !== "Identifier") return;
-          if (possibleReactExportRE.test(identifierNode.name)) {
+          if (reactComponentNameRE.test(identifierNode.name)) {
             localComponents.push(identifierNode);
           }
         };
@@ -135,8 +130,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
           }
 
           if (isFunction) {
-            if (possibleReactExportRE.test(identifierNode.name)) {
-              mayHaveReactExport = true;
+            if (reactComponentNameRE.test(identifierNode.name)) {
+              hasReactExport = true;
             } else {
               nonComponentExports.push(identifierNode);
             }
@@ -162,13 +157,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
               nonComponentExports.push(identifierNode);
               return;
             }
-            if (
-              !mayHaveReactExport &&
-              possibleReactExportRE.test(identifierNode.name)
-            ) {
-              mayHaveReactExport = true;
-            }
-            if (!strictReactExportRE.test(identifierNode.name)) {
+            if (reactComponentNameRE.test(identifierNode.name)) {
+              hasReactExport = true;
+            } else {
               nonComponentExports.push(identifierNode);
             }
           }
@@ -197,7 +188,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             ) {
               // support for react-redux
               // export default connect(mapStateToProps, mapDispatchToProps)(Comp)
-              mayHaveReactExport = true;
+              hasReactExport = true;
             } else if (node.callee.type !== "Identifier") {
               // we rule out non HoC first
               // export default React.memo(function Foo() {})
@@ -205,13 +196,13 @@ export const onlyExportComponents: TSESLint.RuleModule<
               if (
                 node.callee.type === "MemberExpression" &&
                 node.callee.property.type === "Identifier" &&
-                reactHOCs.has(node.callee.property.name)
+                reactHOCs.includes(node.callee.property.name)
               ) {
-                mayHaveReactExport = true;
+                hasReactExport = true;
               } else {
                 context.report({ messageId: "anonymousExport", node });
               }
-            } else if (!reactHOCs.has(node.callee.name)) {
+            } else if (!reactHOCs.includes(node.callee.name)) {
               // we rule out non HoC first
               context.report({ messageId: "anonymousExport", node });
             } else if (
@@ -225,7 +216,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
               // No need to check further, the identifier has necessarily a named,
               // and it would throw at runtime if it's not a React component.
               // We have React exports since we are exporting return value of HoC
-              mayHaveReactExport = true;
+              hasReactExport = true;
             } else {
               context.report({ messageId: "anonymousExport", node });
             }
@@ -289,7 +280,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
 
         if (hasExports) {
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (mayHaveReactExport) {
+          if (hasReactExport) {
             for (const node of nonComponentExports) {
               context.report({ messageId: "namedExport", node });
             }

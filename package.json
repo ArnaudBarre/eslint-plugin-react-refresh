@@ -6,7 +6,7 @@
   "scripts": {
     "build": "scripts/bundle.ts",
     "test": "bun test",
-    "lint": "bun --bun eslint . --max-warnings 0",
+    "lint": "bun eslint . --max-warnings 0",
     "prettier": "bun prettier-ci --write",
     "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{js,ts,json,md,yml}'",
     "ci": "tsc && bun lint && bun prettier-ci && bun test && bun run build"
