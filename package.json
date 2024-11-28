@@ -13,7 +13,7 @@
   },
   "prettier": {},
   "peerDependencies": {
-    "eslint": ">=7"
+    "eslint": ">=8.40"
   },
   "devDependencies": {
     "@arnaud-barre/eslint-config": "^5.1.0",

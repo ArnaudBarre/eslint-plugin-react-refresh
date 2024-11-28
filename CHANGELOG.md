@@ -22,6 +22,12 @@ export default observer(Foo);
 
 Thanks @HorusGoul!
 
+### Bump ESLint peer dependency to 8.40
+
+This was actually done by mistake in the previous release when moving from a deprecated API to a new one.
+
+Given that ESLint 8 is officialy end-of-life and the only report (#56) didn't get likes, I'm going forward and documenting the expected minimum version from ESLin in the package JSON so that people can get warning from their package manager.
+
 ## 0.4.14
 
 - Warn if a context is exported alongside a component (fixes #53). Thanks @IgorAufricht!
