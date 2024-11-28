@@ -21,6 +21,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
         allowConstantExport?: boolean;
         checkJS?: boolean;
         allowExportNames?: string[];
+        customHOCs?: string[];
       },
     ]
 > = {
@@ -47,6 +48,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           allowConstantExport: { type: "boolean" },
           checkJS: { type: "boolean" },
           allowExportNames: { type: "array", items: { type: "string" } },
+          customHOCs: { type: "array", items: { type: "string" } },
         },
         additionalProperties: false,
       },
@@ -58,6 +60,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       allowConstantExport = false,
       checkJS = false,
       allowExportNames,
+      customHOCs = [],
     } = context.options[0] ?? {};
     const filename = context.filename;
     // Skip tests & stories files
@@ -78,6 +81,16 @@ export const onlyExportComponents: TSESLint.RuleModule<
     const allowExportNamesSet = allowExportNames
       ? new Set(allowExportNames)
       : undefined;
+
+    const reactHOCs = new Set(["memo", "forwardRef", ...customHOCs]);
+    const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
+      if (!init) return false;
+      if (init.type === "ArrowFunctionExpression") return true;
+      if (init.type === "CallExpression" && init.callee.type === "Identifier") {
+        return reactHOCs.has(init.callee.name);
+      }
+      return false;
+    };
 
     return {
       Program(program) {
@@ -296,16 +309,6 @@ export const onlyExportComponents: TSESLint.RuleModule<
       },
     };
   },
-};
-
-const reactHOCs = new Set(["memo", "forwardRef"]);
-const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
-  if (!init) return false;
-  if (init.type === "ArrowFunctionExpression") return true;
-  if (init.type === "CallExpression" && init.callee.type === "Identifier") {
-    return reactHOCs.has(init.callee.name);
-  }
-  return false;
 };
 
 type ToString<T> = T extends `${infer V}` ? V : never;

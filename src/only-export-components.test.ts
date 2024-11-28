@@ -189,6 +189,11 @@ const valid = [
     name: "Only React context",
     code: "export const MyContext = createContext('test');",
   },
+  {
+    name: "Custom HOCs like mobx's observer",
+    code: "const MyComponent = () => {}; export default observer(MyComponent);",
+    options: [{ customHOCs: ["observer"] }],
+  },
 ];
 
 const invalid = [
@@ -295,6 +300,11 @@ const invalid = [
     code: "export const MyComponent = () => {}; export const MyContext = React.createContext('test');",
     errorId: "reactContext",
   },
+  {
+    name: "should be invalid when custom HOC is used without adding it to the rule configuration",
+    code: "const MyComponent = () => {}; export default observer(MyComponent);",
+    errorId: ["localComponents", "anonymousExport"],
+  },
 ];
 
 const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
@@ -322,7 +332,9 @@ for (const { name, code, errorId, filename, options = [] } of invalid) {
       {
         filename: filename ?? "Test.jsx",
         code,
-        errors: [{ messageId: errorId }],
+        errors: Array.isArray(errorId)
+          ? errorId.map((messageId) => ({ messageId }))
+          : [{ messageId: errorId }],
         options,
       },
     ],
