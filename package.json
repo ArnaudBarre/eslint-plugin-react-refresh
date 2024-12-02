@@ -1,12 +1,12 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",
     "test": "bun test",
-    "lint": "bun eslint . --max-warnings 0",
+    "lint": "eslint --max-warnings 0",
     "prettier": "bun prettier-ci --write",
     "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{js,ts,json,md,yml}'",
     "ci": "tsc && bun lint && bun prettier-ci && bun test && bun run build && cd dist && publint"

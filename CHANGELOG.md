@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.15
 
 ### Add support for custom HOCs (#60)
 
