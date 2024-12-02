@@ -22,6 +22,23 @@ export default observer(Foo);
 
 Thanks @HorusGoul!
 
+### Add recommended config and simple types (#67)
+
+You can now add the recommended config to your ESLint config like this:
+
+```js
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  /* Main config */
+  reactRefresh.configs.recommended, // Or reactRefresh.configs.vite for Vite users
+];
+```
+
+To follow ESLint recommandations, the rule is added with the `error` severity.
+
+Some simple types ensure that people typecheking their config won't need `@ts-expect-error` anymore.
+
 ### Bump ESLint peer dependency to 8.40
 
 This was actually done by mistake in the previous release when moving from a deprecated API to a new one.
