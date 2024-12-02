@@ -1,10 +1,10 @@
 type Config = {
-  plugins: { "react-refresh": any };
+  plugins: { "react-refresh": { rules: Record<string, any> } };
   rules: Record<string, any>;
 };
 
 declare const _default: {
-  rules: { "only-export-components": any };
+  rules: Record<string, any>;
   configs: {
     recommended: Config;
     vite: Config;

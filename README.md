@@ -1,10 +1,10 @@
 # eslint-plugin-react-refresh [![npm](https://img.shields.io/npm/v/eslint-plugin-react-refresh)](https://www.npmjs.com/package/eslint-plugin-react-refresh)
 
-Validate that your components can safely be updated with fast refresh.
+Validate that your components can safely be updated with Fast Refresh.
 
 ## Explainer
 
-"Fast refresh", also known as "hot reloading", is a feature in many modern bundlers.
+"Fast Refresh", also known as "hot reloading", is a feature in many modern bundlers.
 If you update some React component(s) on disk, then the bundler will know to update only the impacted parts of your page -- without a full page reload.
 
 `eslint-plugin-react-refresh` enforces that your components are structured in a way that integrations such as [react-refresh](https://www.npmjs.com/package/react-refresh) expect.
@@ -28,7 +28,33 @@ npm i -D eslint-plugin-react-refresh
 
 ## Usage
 
-This plugin provides a single rule, `react-refresh/only-export-components`.
+This plugin provides a single rule, `react-refresh/only-export-components`. There are multiple ways to enable it.
+
+### Recommended config
+
+```js
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  /* Main config */
+  reactRefresh.configs.recommended,
+];
+```
+
+### Vite config
+
+This enables the `allowConstantExport` option which is supported by Vite React plugins.
+
+```js
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  /* Main config */
+  reactRefresh.configs.vite,
+];
+```
+
+### Without config
 
 ```js
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -112,7 +138,6 @@ These options are all present on `react-refresh/only-exports-components`.
 ```ts
 interface Options {
   allowExportNames?: string[];
-  allowExportNames?: string[];
   allowConstantExport?: boolean;
   customHOCs?: string[];
   checkJS?: boolean;
@@ -145,7 +170,7 @@ Example for [Remix](https://remix.run/docs/en/main/discussion/hot-module-replace
 
 ### allowConstantExport <small>(v0.4.0)</small>
 
-> Default: `false`
+> Default: `false` (`true` in `vite` config)
 
 Don't warn when a constant (string, number, boolean, templateLiteral) is exported aside one or more components.
 
