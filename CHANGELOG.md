@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.16
+
+Fix CJS/ESM interop issue. Sorry everyone for the trouble.
+
 ## 0.4.15
 
 ### Add support for custom HOCs (#60)
