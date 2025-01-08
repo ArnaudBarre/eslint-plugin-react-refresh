@@ -13,7 +13,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
   | []
   | [
       {
-        allowExportNames?: string[];
+        allowExportNames?: ({ pattern: string } | string)[];
         allowConstantExport?: boolean;
         customHOCs?: string[];
         checkJS?: boolean;
@@ -40,7 +40,15 @@ export const onlyExportComponents: TSESLint.RuleModule<
       {
         type: "object",
         properties: {
-          allowExportNames: { type: "array", items: { type: "string" } },
+          allowExportNames: { 
+            type: "array", 
+            items: { 
+              oneOf: [
+                { type: "string" },
+                { type: "object", properties: { pattern: { type: "string" } } }
+              ]
+            }
+          },
           allowConstantExport: { type: "boolean" },
           customHOCs: { type: "array", items: { type: "string" } },
           checkJS: { type: "boolean" },
@@ -52,7 +60,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
   defaultOptions: [],
   create: (context) => {
     const {
-      allowExportNames,
+      allowExportNames = [],
       allowConstantExport = false,
       customHOCs = [],
       checkJS = false,
@@ -73,9 +81,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
       (checkJS && filename.endsWith(".js"));
     if (!shouldScan) return {};
 
-    const allowExportNamesSet = allowExportNames
-      ? new Set(allowExportNames)
-      : undefined;
+    const allowExportNamesRegExps = allowExportNames.filter((name) => typeof name !== "string" ).map((name) => new RegExp(name.pattern, "u"))
+    const allowExportNamesSet = new Set(allowExportNames.filter((name) => typeof name === "string"))
 
     const reactHOCs = ["memo", "forwardRef", ...customHOCs];
     const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
@@ -117,7 +124,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
             nonComponentExports.push(identifierNode);
             return;
           }
-          if (allowExportNamesSet?.has(identifierNode.name)) return;
+          if (allowExportNamesSet.has(identifierNode.name)) return;
+          if (allowExportNamesRegExps.some(regex => regex.test(identifierNode.name))) return;
           if (
             allowConstantExport &&
             init &&
@@ -220,7 +228,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             } else {
               context.report({ messageId: "anonymousExport", node });
             }
-          } else if (node.type === "TSEnumDeclaration") {
+          } else if (node.type === "TSEnumDeclaration" && !allowExportNamesSet.has(node.id.name) && !allowExportNamesRegExps.some(regex => regex.test(node.id.name))) {
             nonComponentExports.push(node.id);
           }
         };

@@ -160,6 +160,11 @@ const valid = [
     options: [{ allowExportNames: ["loader", "meta"] }],
   },
   {
+    name: "Component and allowed export with regex",
+    code: "export const loader = () => {}; export const Bar = () => {};",
+    options: [{ allowExportNames: [{ pattern: "loader$" }] }],
+  },
+  {
     name: "Component and allowed function export",
     code: "export function loader() {}; export const Bar = () => {};",
     options: [{ allowExportNames: ["loader", "meta"] }],
