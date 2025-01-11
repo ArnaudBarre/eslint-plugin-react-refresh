@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.18
+
+ESM/CJS interop is the worth that happend to this ecosystem, this is all I have to say.
+
 ## 0.4.17
 
 - Fix detection of local components to not generate warning on for variable inside JSX files that follow React component naming (fixes #75)
