@@ -17,7 +17,7 @@ await build({
 });
 
 execSync("cp LICENSE README.md dist/");
-execSync("cp src/types.ts dist/index.d.ts");
+execSync("cp src/types.d.ts dist/index.d.ts");
 
 writeFileSync(
   "dist/package.json",

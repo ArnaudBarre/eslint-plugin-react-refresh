@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.17
 
-- Fix detection of local components to not generate warning on for variable inside JSX files that follow React component naming 
+- Fix detection of local components to not generate warning on for variable inside JSX files that follow React component naming (fixes #75)
+- Update types to not require extra unnecessary `.default` property access under TS node16 module resolution (fixes #70)
 
 ## 0.4.16
 
