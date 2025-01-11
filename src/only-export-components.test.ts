@@ -194,6 +194,10 @@ const valid = [
     code: "const MyComponent = () => {}; export default observer(MyComponent);",
     options: [{ customHOCs: ["observer"] }],
   },
+  {
+    name: "Local constant with component casing and non component function",
+    code: "const SomeConstant = 42; export function someUtility() { return SomeConstant }",
+  },
 ];
 
 const invalid = [

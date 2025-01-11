@@ -99,15 +99,6 @@ export const onlyExportComponents: TSESLint.RuleModule<
         )[] = [];
         const reactContextExports: TSESTree.Identifier[] = [];
 
-        const handleLocalIdentifier = (
-          identifierNode: TSESTree.BindingName,
-        ) => {
-          if (identifierNode.type !== "Identifier") return;
-          if (reactComponentNameRE.test(identifierNode.name)) {
-            localComponents.push(identifierNode);
-          }
-        };
-
         const handleExportIdentifier = (
           identifierNode: TSESTree.BindingName | TSESTree.StringLiteral,
           isFunction?: boolean,
@@ -264,10 +255,18 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
-              handleLocalIdentifier(variable.id);
+              if (
+                variable.id.type === "Identifier" &&
+                reactComponentNameRE.test(variable.id.name) &&
+                canBeReactFunctionComponent(variable.init)
+              ) {
+                localComponents.push(variable.id);
+              }
             }
           } else if (node.type === "FunctionDeclaration") {
-            handleLocalIdentifier(node.id);
+            if (reactComponentNameRE.test(node.id.name)) {
+              localComponents.push(node.id);
+            }
           } else if (
             node.type === "ImportDeclaration" &&
             node.source.value === "react"

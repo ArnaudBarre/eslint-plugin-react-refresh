@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fix detection of local components to not generate warning on for variable inside JSX files that follow React component naming 
+
 ## 0.4.16
 
 Fix CJS/ESM interop issue. Sorry everyone for the trouble.
