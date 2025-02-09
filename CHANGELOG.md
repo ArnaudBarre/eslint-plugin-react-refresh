@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.4.19
+
+Add name to configs for [ESLint Config Inspector](https://github.com/eslint/config-inspector)
+
 ## 0.4.18
 
-ESM/CJS interop is the worth that happend to this ecosystem, this is all I have to say.
+ESM/CJS interop is the worse that happened to this ecosystem, this is all I have to say.
 
 ## 0.4.17
 
