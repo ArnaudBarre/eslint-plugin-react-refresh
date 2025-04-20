@@ -112,10 +112,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           if (
             allowConstantExport &&
             init &&
-            (init.type === "Literal" || // 1, "foo"
-              init.type === "UnaryExpression" || // -1
-              init.type === "TemplateLiteral" || // `Some ${template}`
-              init.type === "BinaryExpression") // 24 * 60
+            constantExportExpressions.has(skipTSWrapper(init).type)
           ) {
             return;
           }
@@ -223,11 +220,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             context.report({ messageId: "exportAll", node });
           } else if (node.type === "ExportDefaultDeclaration") {
             hasExports = true;
-            const declaration =
-              node.declaration.type === "TSAsExpression" ||
-              node.declaration.type === "TSSatisfiesExpression"
-                ? node.declaration.expression
-                : node.declaration;
+            const declaration = skipTSWrapper(node.declaration);
             if (
               declaration.type === "VariableDeclaration" ||
               declaration.type === "FunctionDeclaration" ||
@@ -301,7 +294,22 @@ export const onlyExportComponents: TSESLint.RuleModule<
   },
 };
 
+const skipTSWrapper = <T extends TSESTree.Node>(node: T) => {
+  if (node.type === "TSAsExpression" || node.type === "TSSatisfiesExpression") {
+    return node.expression;
+  }
+  return node;
+};
+
 type ToString<T> = T extends `${infer V}` ? V : never;
+const constantExportExpressions = new Set<
+  ToString<TSESTree.Expression["type"]>
+>([
+  "Literal", // 1, "foo"
+  "UnaryExpression", // -1
+  "TemplateLiteral", // `Some ${template}`
+  "BinaryExpression", // 24 * 60
+]);
 const notReactComponentExpression = new Set<
   ToString<TSESTree.Expression["type"]>
 >([

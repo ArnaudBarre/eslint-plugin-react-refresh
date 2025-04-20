@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fix false positive with `as const` (fixes [#80](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/80))
+
 ## 0.4.19
 
 Add name to configs for [ESLint Config Inspector](https://github.com/eslint/config-inspector)

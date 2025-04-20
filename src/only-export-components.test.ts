@@ -198,6 +198,11 @@ const valid = [
     name: "Local constant with component casing and non component function",
     code: "const SomeConstant = 42; export function someUtility() { return SomeConstant }",
   },
+  {
+    name: "Component and as const constant with allowConstantExport",
+    code: "export const MyComponent = () => {}; export const MENU_WIDTH = 232 as const;",
+    options: [{ allowConstantExport: true }],
+  },
 ];
 
 const invalid = [
