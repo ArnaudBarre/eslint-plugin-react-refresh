@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.4.20
 
+- Don't warn on nested HOC calls (fixes [#79](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/79))
 - Fix false positive with `as const` (fixes [#80](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/80))
 
 ## 0.4.19

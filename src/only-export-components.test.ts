@@ -203,6 +203,18 @@ const valid = [
     code: "export const MyComponent = () => {}; export const MENU_WIDTH = 232 as const;",
     options: [{ allowConstantExport: true }],
   },
+  {
+    name: "Type assertion in memo export",
+    code: "export const MyComponent = () => {}; export default memo(MyComponent as any);",
+  },
+  {
+    name: "Type assertion for memo export",
+    code: "export const MyComponent = () => {}; export default memo(MyComponent) as any;",
+  },
+  {
+    name: "Nested memo HOC",
+    code: "export const MyComponent = () => {}; export default memo(forwardRef(MyComponent));",
+  },
 ];
 
 const invalid = [

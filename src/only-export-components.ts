@@ -80,9 +80,13 @@ export const onlyExportComponents: TSESLint.RuleModule<
     const reactHOCs = ["memo", "forwardRef", ...customHOCs];
     const canBeReactFunctionComponent = (init: TSESTree.Expression | null) => {
       if (!init) return false;
-      if (init.type === "ArrowFunctionExpression") return true;
-      if (init.type === "CallExpression" && init.callee.type === "Identifier") {
-        return reactHOCs.includes(init.callee.name);
+      const jsInit = skipTSWrapper(init);
+      if (jsInit.type === "ArrowFunctionExpression") return true;
+      if (
+        jsInit.type === "CallExpression" &&
+        jsInit.callee.type === "Identifier"
+      ) {
+        return reactHOCs.includes(jsInit.callee.name);
       }
       return false;
     };
@@ -153,6 +157,42 @@ export const onlyExportComponents: TSESLint.RuleModule<
           }
         };
 
+        const isHOCCallExpression = (
+          node: TSESTree.CallExpression,
+        ): boolean => {
+          const isCalleeHOC =
+            // support for react-redux
+            // export default connect(mapStateToProps, mapDispatchToProps)(...)
+            (node.callee.type === "CallExpression" &&
+              node.callee.callee.type === "Identifier" &&
+              node.callee.callee.name === "connect") ||
+            // React.memo(...)
+            (node.callee.type === "MemberExpression" &&
+              node.callee.property.type === "Identifier" &&
+              reactHOCs.includes(node.callee.property.name)) ||
+            // memo(...)
+            (node.callee.type === "Identifier" &&
+              reactHOCs.includes(node.callee.name));
+          if (!isCalleeHOC) return false;
+          if (node.arguments.length === 0) return false;
+          const arg = skipTSWrapper(node.arguments[0]);
+          switch (arg.type) {
+            case "Identifier":
+              // memo(Component)
+              return true;
+            case "FunctionExpression":
+              if (!arg.id) return false;
+              // memo(function Component() {})
+              handleExportIdentifier(arg.id, true);
+              return true;
+            case "CallExpression":
+              // memo(forwardRef(...))
+              return isHOCCallExpression(arg);
+            default:
+              return false;
+          }
+        };
+
         const handleExportDeclaration = (node: TSESTree.ExportDeclaration) => {
           if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
@@ -169,41 +209,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
               handleExportIdentifier(node.id, true);
             }
           } else if (node.type === "CallExpression") {
-            if (
-              node.callee.type === "CallExpression" &&
-              node.callee.callee.type === "Identifier" &&
-              node.callee.callee.name === "connect"
-            ) {
-              // support for react-redux
-              // export default connect(mapStateToProps, mapDispatchToProps)(Comp)
-              hasReactExport = true;
-            } else if (node.callee.type !== "Identifier") {
-              // we rule out non HoC first
-              // export default React.memo(function Foo() {})
-              // export default Preact.memo(function Foo() {})
-              if (
-                node.callee.type === "MemberExpression" &&
-                node.callee.property.type === "Identifier" &&
-                reactHOCs.includes(node.callee.property.name)
-              ) {
-                hasReactExport = true;
-              } else {
-                context.report({ messageId: "anonymousExport", node });
-              }
-            } else if (!reactHOCs.includes(node.callee.name)) {
-              // we rule out non HoC first
-              context.report({ messageId: "anonymousExport", node });
-            } else if (
-              node.arguments[0]?.type === "FunctionExpression" &&
-              node.arguments[0].id
-            ) {
-              // export default memo(function Foo() {})
-              handleExportIdentifier(node.arguments[0].id, true);
-            } else if (node.arguments[0]?.type === "Identifier") {
-              // const Foo = () => {}; export default memo(Foo);
-              // No need to check further, the identifier has necessarily a named,
-              // and it would throw at runtime if it's not a React component.
-              // We have React exports since we are exporting return value of HoC
+            const isValid = isHOCCallExpression(node);
+            if (isValid) {
               hasReactExport = true;
             } else {
               context.report({ messageId: "anonymousExport", node });
@@ -237,7 +244,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
           } else if (node.type === "ExportNamedDeclaration") {
             if (node.exportKind === "type") continue;
             hasExports = true;
-            if (node.declaration) handleExportDeclaration(node.declaration);
+            if (node.declaration) {
+              handleExportDeclaration(skipTSWrapper(node.declaration));
+            }
             for (const specifier of node.specifiers) {
               handleExportIdentifier(
                 specifier.exported.type === "Identifier" &&
