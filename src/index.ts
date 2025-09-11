@@ -22,6 +22,28 @@ export const configs = {
       ],
     },
   },
+  next: {
+    name: "react-refresh/vite",
+    plugins: { "react-refresh": plugin },
+    rules: {
+      "react-refresh/only-export-components": [
+        "error",
+        {
+          // from https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
+          allowExportNames: [
+            "experimental_ppr",
+            "dynamic",
+            "dynamicParams",
+            "revalidate",
+            "fetchCache",
+            "runtime",
+            "preferredRegion",
+            "maxDuration",
+          ],
+        },
+      ],
+    },
+  },
 };
 
 // Probably not needed, but keep for backwards compatibility
