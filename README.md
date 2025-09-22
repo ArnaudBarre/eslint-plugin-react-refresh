@@ -54,6 +54,19 @@ export default [
 ];
 ```
 
+### Next config
+
+This allows exports like `fetchCache` and `revalidate` which are used in Page or Layout components and don't trigger a full page reload.
+
+```js
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  /* Main config */
+  reactRefresh.configs.next,
+];
+```
+
 ### Without config
 
 ```js

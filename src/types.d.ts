@@ -8,6 +8,7 @@ declare const _default: {
   configs: {
     recommended: Config;
     vite: Config;
+    next: Config;
   };
 };
 

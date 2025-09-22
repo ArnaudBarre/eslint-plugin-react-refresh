@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.4.21
+
+- Add Next config (fixes [#85](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/85))
+
+This allows exports like `fetchCache` and `revalidate` which are used in Page or Layout components and don't trigger a full page reload.
+
+```js
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default [
+  /* Main config */
+  reactRefresh.configs.next,
+];
+```
+
 ## 0.4.20
 
 - Don't warn on nested HOC calls (fixes [#79](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/79))
