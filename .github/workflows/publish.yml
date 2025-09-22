@@ -5,7 +5,7 @@ on:
       - main
 permissions:
   id-token: write
-  contents: read
+  contents: write
 jobs:
   publish:
     runs-on: ubuntu-latest
