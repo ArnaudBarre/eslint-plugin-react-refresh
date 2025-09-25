@@ -60,17 +60,17 @@ export const onlyExportComponents: TSESLint.RuleModule<
     const filename = context.filename;
     // Skip tests & stories files
     if (
-      filename.includes(".test.") ||
-      filename.includes(".spec.") ||
-      filename.includes(".cy.") ||
-      filename.includes(".stories.")
+      filename.includes(".test.")
+      || filename.includes(".spec.")
+      || filename.includes(".cy.")
+      || filename.includes(".stories.")
     ) {
       return {};
     }
     const shouldScan =
-      filename.endsWith(".jsx") ||
-      filename.endsWith(".tsx") ||
-      (checkJS && filename.endsWith(".js"));
+      filename.endsWith(".jsx")
+      || filename.endsWith(".tsx")
+      || (checkJS && filename.endsWith(".js"));
     if (!shouldScan) return {};
 
     const allowExportNamesSet = allowExportNames
@@ -83,8 +83,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
       const jsInit = skipTSWrapper(init);
       if (jsInit.type === "ArrowFunctionExpression") return true;
       if (
-        jsInit.type === "CallExpression" &&
-        jsInit.callee.type === "Identifier"
+        jsInit.type === "CallExpression"
+        && jsInit.callee.type === "Identifier"
       ) {
         return reactHOCs.includes(jsInit.callee.name);
       }
@@ -114,9 +114,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
           }
           if (allowExportNamesSet?.has(identifierNode.name)) return;
           if (
-            allowConstantExport &&
-            init &&
-            constantExportExpressions.has(skipTSWrapper(init).type)
+            allowConstantExport
+            && init
+            && constantExportExpressions.has(skipTSWrapper(init).type)
           ) {
             return;
           }
@@ -129,22 +129,22 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else {
             if (
-              init &&
-              init.type === "CallExpression" &&
+              init
+              && init.type === "CallExpression"
               // createContext || React.createContext
-              ((init.callee.type === "Identifier" &&
-                init.callee.name === "createContext") ||
-                (init.callee.type === "MemberExpression" &&
-                  init.callee.property.type === "Identifier" &&
-                  init.callee.property.name === "createContext"))
+              && ((init.callee.type === "Identifier"
+                && init.callee.name === "createContext")
+                || (init.callee.type === "MemberExpression"
+                  && init.callee.property.type === "Identifier"
+                  && init.callee.property.name === "createContext"))
             ) {
               reactContextExports.push(identifierNode);
               return;
             }
             if (
-              init &&
+              init
               // Switch to allowList?
-              notReactComponentExpression.has(init.type)
+              && notReactComponentExpression.has(init.type)
             ) {
               nonComponentExports.push(identifierNode);
               return;
@@ -163,16 +163,16 @@ export const onlyExportComponents: TSESLint.RuleModule<
           const isCalleeHOC =
             // support for react-redux
             // export default connect(mapStateToProps, mapDispatchToProps)(...)
-            (node.callee.type === "CallExpression" &&
-              node.callee.callee.type === "Identifier" &&
-              node.callee.callee.name === "connect") ||
+            (node.callee.type === "CallExpression"
+              && node.callee.callee.type === "Identifier"
+              && node.callee.callee.name === "connect")
             // React.memo(...)
-            (node.callee.type === "MemberExpression" &&
-              node.callee.property.type === "Identifier" &&
-              reactHOCs.includes(node.callee.property.name)) ||
+            || (node.callee.type === "MemberExpression"
+              && node.callee.property.type === "Identifier"
+              && reactHOCs.includes(node.callee.property.name))
             // memo(...)
-            (node.callee.type === "Identifier" &&
-              reactHOCs.includes(node.callee.name));
+            || (node.callee.type === "Identifier"
+              && reactHOCs.includes(node.callee.name));
           if (!isCalleeHOC) return false;
           if (node.arguments.length === 0) return false;
           const arg = skipTSWrapper(node.arguments[0]);
@@ -229,9 +229,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
             hasExports = true;
             const declaration = skipTSWrapper(node.declaration);
             if (
-              declaration.type === "VariableDeclaration" ||
-              declaration.type === "FunctionDeclaration" ||
-              declaration.type === "CallExpression"
+              declaration.type === "VariableDeclaration"
+              || declaration.type === "FunctionDeclaration"
+              || declaration.type === "CallExpression"
             ) {
               handleExportDeclaration(declaration);
             }
@@ -249,8 +249,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
             for (const specifier of node.specifiers) {
               handleExportIdentifier(
-                specifier.exported.type === "Identifier" &&
-                  specifier.exported.name === "default"
+                specifier.exported.type === "Identifier"
+                  && specifier.exported.name === "default"
                   ? specifier.local
                   : specifier.exported,
               );
@@ -258,9 +258,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
           } else if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
               if (
-                variable.id.type === "Identifier" &&
-                reactComponentNameRE.test(variable.id.name) &&
-                canBeReactFunctionComponent(variable.init)
+                variable.id.type === "Identifier"
+                && reactComponentNameRE.test(variable.id.name)
+                && canBeReactFunctionComponent(variable.init)
               ) {
                 localComponents.push(variable.id);
               }
@@ -270,8 +270,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
               localComponents.push(node.id);
             }
           } else if (
-            node.type === "ImportDeclaration" &&
-            node.source.value === "react"
+            node.type === "ImportDeclaration"
+            && node.source.value === "react"
           ) {
             reactIsInScope = true;
           }
@@ -280,7 +280,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
         if (checkJS && !reactIsInScope) return;
 
         if (hasExports) {
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          // tsl-ignore core/noUnnecessaryCondition
           if (hasReactExport) {
             for (const node of nonComponentExports) {
               context.report({ messageId: "namedExport", node });

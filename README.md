@@ -33,12 +33,13 @@ This plugin provides a single rule, `react-refresh/only-export-components`. Ther
 ### Recommended config
 
 ```js
+import { defineConfig } from "eslint/config";
 import reactRefresh from "eslint-plugin-react-refresh";
 
-export default [
+export default defineConfig(
   /* Main config */
   reactRefresh.configs.recommended,
-];
+);
 ```
 
 ### Vite config
@@ -46,43 +47,44 @@ export default [
 This enables the `allowConstantExport` option which is supported by Vite React plugins.
 
 ```js
+import { defineConfig } from "eslint/config";
 import reactRefresh from "eslint-plugin-react-refresh";
 
-export default [
+export default defineConfig(
   /* Main config */
   reactRefresh.configs.vite,
-];
+);
 ```
 
-### Next config
+### Next config <small>(v0.4.21)</small>
 
 This allows exports like `fetchCache` and `revalidate` which are used in Page or Layout components and don't trigger a full page reload.
 
 ```js
+import { defineConfig } from "eslint/config";
 import reactRefresh from "eslint-plugin-react-refresh";
 
-export default [
+export default defineConfig(
   /* Main config */
   reactRefresh.configs.next,
-];
+);
 ```
 
 ### Without config
 
 ```js
+import { defineConfig } from "eslint/config";
 import reactRefresh from "eslint-plugin-react-refresh";
 
-export default [
-  {
-    // in main config for TSX/JSX source files
-    plugins: {
-      "react-refresh": reactRefresh,
-    },
-    rules: {
-      "react-refresh/only-export-components": "error",
-    },
+export default defineConfig({
+  // in main config for TSX/JSX source files
+  plugins: {
+    "react-refresh": reactRefresh,
   },
-];
+  rules: {
+    "react-refresh/only-export-components": "error",
+  },
+});
 ```
 
 ### Legacy config
@@ -91,8 +93,8 @@ export default [
 {
   "plugins": ["react-refresh"],
   "rules": {
-    "react-refresh/only-export-components": "error"
-  }
+    "react-refresh/only-export-components": "error",
+  },
 }
 ```
 

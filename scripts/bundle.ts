@@ -1,9 +1,9 @@
-#!/usr/bin/env tnode
+#!/usr/bin/env node
 import { rmSync, writeFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { build } from "esbuild";
 
-import packageJSON from "../package.json";
+import packageJSON from "../package.json" with { type: "json" };
 
 rmSync("dist", { force: true, recursive: true });
 

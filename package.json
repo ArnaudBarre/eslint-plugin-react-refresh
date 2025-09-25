@@ -9,23 +9,24 @@
     "lint": "eslint --max-warnings 0",
     "prettier": "bun prettier-ci --write",
     "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{js,ts,json,md,yml}'",
-    "ci": "tsc && bun lint && bun prettier-ci && bun test && bun run build && cd dist && publint"
+    "ci": "tsl && bun lint && bun prettier-ci && bun test && bun run build && cd dist && publint"
   },
-  "prettier": {},
+  "prettier": {
+    "experimentalOperatorPosition": "start"
+  },
   "peerDependencies": {
     "eslint": ">=8.40"
   },
   "devDependencies": {
-    "@arnaud-barre/eslint-config": "^5.2.4",
-    "@arnaud-barre/tnode": "^0.24.0",
-    "@types/eslint": "^9.6.1",
-    "@types/node": "^20.17.30",
-    "@typescript-eslint/parser": "^8.30.1",
-    "@typescript-eslint/utils": "^8.30.1",
-    "bun-types": "^1.2.10",
-    "eslint": "^9.25.0",
-    "prettier": "3.0.3",
-    "publint": "^0.3.12",
-    "typescript": "~5.8"
+    "@arnaud-barre/eslint-config": "^6.1.2",
+    "@arnaud-barre/tsl-config": "^0.1.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "@typescript-eslint/utils": "^8.44.1",
+    "bun-types": "^1.2.22",
+    "eslint": "^9.36.0",
+    "prettier": "^3.6.2",
+    "publint": "^0.3.13",
+    "tsl": "^1.0.25",
+    "typescript": "~5.9"
   }
 }
