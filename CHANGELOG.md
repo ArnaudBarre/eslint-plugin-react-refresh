@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.22
+
+- Add `"viewport"` to `allowExportNames` in Next config ([#89](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/89))
+
 ## 0.4.21
 
 - Add Next config (fixes [#85](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/85))
