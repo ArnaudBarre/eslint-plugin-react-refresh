@@ -39,6 +39,7 @@ export const configs = {
             "runtime",
             "preferredRegion",
             "maxDuration",
+            "viewport",
           ],
         },
       ],
