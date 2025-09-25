@@ -170,6 +170,11 @@ const valid = [
     options: [{ allowExportNames: ["loader", "meta"] }],
   },
   {
+    name: "Component and viewport export for Next.js",
+    code: "export const viewport = { width: 'device-width', initialScale: 1 }; export const Page = () => {};",
+    options: [{ allowExportNames: ["viewport"] }],
+  },
+  {
     name: "Export as default",
     code: "export { App as default }; const App = () => <>Test</>;",
   },
