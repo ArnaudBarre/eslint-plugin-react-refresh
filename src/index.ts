@@ -29,8 +29,8 @@ export const configs = {
       "react-refresh/only-export-components": [
         "error",
         {
-          // from https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
           allowExportNames: [
+            // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
             "experimental_ppr",
             "dynamic",
             "dynamicParams",
@@ -39,7 +39,12 @@ export const configs = {
             "runtime",
             "preferredRegion",
             "maxDuration",
+            // https://nextjs.org/docs/app/api-reference/functions/generate-metadata
+            "metadata",
+            "generateMetadata",
+            // https://nextjs.org/docs/app/api-reference/functions/generate-viewport
             "viewport",
+            "generateViewport",
           ],
         },
       ],

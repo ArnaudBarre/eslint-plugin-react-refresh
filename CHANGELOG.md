@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.23
+
+- Add `"metadata"`, `"generateMetadata"` & `"generateViewport"` to `allowExportNames` in Next config
+
 ## 0.4.22
 
 - Add `"viewport"` to `allowExportNames` in Next config ([#89](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/89))

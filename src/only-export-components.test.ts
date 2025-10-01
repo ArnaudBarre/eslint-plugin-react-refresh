@@ -1,5 +1,3 @@
-#!/usr/bin/env tnode
-import { test } from "bun:test";
 import parser from "@typescript-eslint/parser";
 import { RuleTester } from "eslint";
 import { onlyExportComponents } from "./only-export-components.ts";
@@ -334,14 +332,12 @@ const invalid = [
 ];
 
 const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
-  test(name, () => {
-    ruleTester.run(
-      "only-export-components",
-      // @ts-expect-error Mismatch between typescript-eslint and eslint
-      onlyExportComponents,
-      cases,
-    );
-  });
+  ruleTester.run(
+    name,
+    // @ts-expect-error Mismatch between typescript-eslint and eslint
+    onlyExportComponents,
+    cases,
+  );
 };
 
 for (const { name, code, filename, options = [] } of valid) {
