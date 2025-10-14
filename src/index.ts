@@ -45,6 +45,12 @@ export const configs = {
             // https://nextjs.org/docs/app/api-reference/functions/generate-viewport
             "viewport",
             "generateViewport",
+            // https://nextjs.org/docs/app/api-reference/functions/generate-image-metadata
+            "generateImageMetadata",
+            // https://nextjs.org/docs/app/api-reference/functions/generate-sitemaps
+            "generateSitemaps",
+            // https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+            "generateStaticParams",
           ],
         },
       ],

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.24
+
+- Add `"generateImageMetadata"`, `"generateSitemaps"` & `"generateStaticParams"` to `allowExportNames` in Next config
+
 ## 0.4.23
 
 - Add `"metadata"`, `"generateMetadata"` & `"generateViewport"` to `allowExportNames` in Next config
