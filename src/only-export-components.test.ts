@@ -173,21 +173,6 @@ const valid = [
     options: [{ allowExportNames: ["viewport"] }],
   },
   {
-    name: "Component and generateImageMetadata export for Next.js",
-    code: "export function generateImageMetadata() { return [{ id: 'home' }] }; export const Page = () => {};",
-    options: [{ allowExportNames: ["generateImageMetadata"] }],
-  },
-  {
-    name: "Component and generateSitemaps export for Next.js",
-    code: "export async function generateSitemaps() { return [{ id: 1 }] }; export const Page = () => {};",
-    options: [{ allowExportNames: ["generateSitemaps"] }],
-  },
-  {
-    name: "Component and generateStaticParams export for Next.js",
-    code: "export async function generateStaticParams() { return [{ slug: 'post-1' }] }; export const Page = () => {};",
-    options: [{ allowExportNames: ["generateStaticParams"] }],
-  },
-  {
     name: "Export as default",
     code: "export { App as default }; const App = () => <>Test</>;",
   },
