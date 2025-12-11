@@ -30,6 +30,10 @@ const valid = [
     code: "export const Foo2 = () => {};",
   },
   {
+    name: "Direct export AF component with underscore",
+    code: "export const Foo_ = () => {};",
+  },
+  {
     name: "Direct export uppercase function",
     code: "export function CMS() {};",
   },
