@@ -231,6 +231,11 @@ const invalid = [
     errorId: "namedExport",
   },
   {
+    name: "Component and underscored component",
+    code: "export const _Foo = () => {}; export const Foo = () => {};",
+    errorId: "namedExport",
+  },
+  {
     name: "Component and function with allowConstantExport",
     code: "export const foo = () => {}; export const Bar = () => {};",
     errorId: "namedExport",
