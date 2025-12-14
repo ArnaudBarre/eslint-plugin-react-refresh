@@ -1,7 +1,7 @@
 import type { TSESLint } from "@typescript-eslint/utils";
 import type { TSESTree } from "@typescript-eslint/types";
 
-const reactComponentNameRE = /^[A-Z][a-zA-Z0-9]*$/u;
+const reactComponentNameRE = /^[A-Z][a-zA-Z0-9_]*$/u;
 
 export const onlyExportComponents: TSESLint.RuleModule<
   | "exportAll"

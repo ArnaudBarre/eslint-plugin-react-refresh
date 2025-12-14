@@ -30,6 +30,10 @@ const valid = [
     code: "export const Foo2 = () => {};",
   },
   {
+    name: "Direct export AF component with underscore",
+    code: "export const Foo_ = () => {};",
+  },
+  {
     name: "Direct export uppercase function",
     code: "export function CMS() {};",
   },
@@ -224,6 +228,11 @@ const invalid = [
   {
     name: "Component and function",
     code: "export const foo = () => {}; export const Bar = () => {};",
+    errorId: "namedExport",
+  },
+  {
+    name: "Component and underscored component",
+    code: "export const _Foo = () => {}; export const Foo = () => {};",
     errorId: "namedExport",
   },
   {
