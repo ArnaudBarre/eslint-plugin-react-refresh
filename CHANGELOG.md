@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.25
+
+- Report cases like `export const ENUM = Object.keys(TABLE) as EnumType[];` (fixes [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93))
+- Allow `_` in component names ([#94](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/94))
+
 ## 0.4.24
 
 - Add `"generateImageMetadata"`, `"generateSitemaps"` & `"generateStaticParams"` to `allowExportNames` in Next config
