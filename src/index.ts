@@ -23,7 +23,7 @@ export const configs = {
     },
   },
   next: {
-    name: "react-refresh/vite",
+    name: "react-refresh/next",
     plugins: { "react-refresh": plugin },
     rules: {
       "react-refresh/only-export-components": [
