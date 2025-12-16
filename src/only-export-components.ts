@@ -106,9 +106,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
         const handleExportIdentifier = (
           identifierNode: TSESTree.BindingName | TSESTree.StringLiteral,
           isFunction?: boolean,
-          initParam?: TSESTree.Expression | null,
+          init?: TSESTree.Expression | null,
         ) => {
-          const init = initParam ? skipTSWrapper(initParam) : null;
           if (identifierNode.type !== "Identifier") {
             nonComponentExports.push(identifierNode);
             return;
@@ -117,7 +116,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           if (
             allowConstantExport
             && init
-            && constantExportExpressions.has(init.type)
+            && constantExportExpressions.has(skipTSWrapper(init).type)
           ) {
             return;
           }
@@ -140,14 +139,6 @@ export const onlyExportComponents: TSESLint.RuleModule<
                   && init.callee.property.name === "createContext"))
             ) {
               reactContextExports.push(identifierNode);
-              return;
-            }
-            if (init && init.type === "CallExpression") {
-              if (isHOCCallExpression(init)) {
-                hasReactExport = true;
-              } else {
-                nonComponentExports.push(identifierNode);
-              }
               return;
             }
             if (

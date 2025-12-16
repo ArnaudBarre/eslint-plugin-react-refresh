@@ -338,11 +338,6 @@ const invalid = [
     code: "const MyComponent = () => {}; export default observer(MyComponent);",
     errorId: ["localComponents", "anonymousExport"],
   },
-  {
-    name: "Object.keys",
-    code: "const MyComponent = () => {}; export const ENUM = Object.keys(TABLE) as EnumType[];",
-    errorId: "localComponents",
-  },
 ];
 
 const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {

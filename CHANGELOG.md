@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.4.26
+
+- Revert changes to fix [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93) (fixes [#95](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/95))
+
 ## 0.4.25
 
-- Report cases like `export const ENUM = Object.keys(TABLE) as EnumType[];` (fixes [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93))
+- Report cases like `export const ENUM = Object.keys(TABLE) as EnumType[];` (fixes [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93)) (reverted in 0.4.26)
 - Allow `_` in component names ([#94](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/94))
 
 ## 0.4.24
