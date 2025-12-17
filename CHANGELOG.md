@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.5.0
+
+This version follows a revamp of the internal logic to better make the difference between random call expressions like `export const Enum = Object.keys(Record)` and actual React HOC calls like `export const MemoComponent = memo(Component)`. (fixes [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93))
+
+The rule now handles ternaries and patterns like `export default customHOC(props)(Component)` which makes it able to correctly support files like [this one](https://github.com/eclipse-apoapsis/ort-server/blob/ddfc624ce71b9f2ca6bad9b8c82d4c3249dd9c8b/ui/src/routes/__root.tsx) given this config:
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "warn",
+    { "customHOCs": ["createRootRouteWithContext"] }
+  ]
+}
+```
+
+> [!NOTE]
+> Actually createRoute functions from TanStack Router are not React HOCs, they return route objects that [fake to be a memoized component](https://github.com/TanStack/router/blob/8628d0189412ccb8d3a01840aa18bac8295e18c8/packages/react-router/src/route.tsx#L263) but are not. When only doing `createRootRoute({ component: Foo })`, HMR will work fine, but as soon as you add a prop to the options that is not a React component, HMR will not work. I would recommend to avoid adding any TanStack function to `customHOCs` it you want to preserve good HMR in the long term. [Bluesky thread](https://bsky.app/profile/arnaud-barre.bsky.social/post/3ma5h5tf2sk2e).
+
+Because I'm not 100% sure this new logic doesn't introduce any false positive, this is done in a major-like version. This also give me the occasion to remove the hardcoded `connect` from the rule. If you are using `connect` from `react-redux`, you should now add it to `customHOCs` like this:
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "warn",
+    { "customHOCs": ["connect"] }
+  ]
+}
+```
+
 ## 0.4.26
 
 - Revert changes to fix [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93) (fixes [#95](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/95))
