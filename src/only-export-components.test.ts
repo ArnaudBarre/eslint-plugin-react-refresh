@@ -202,6 +202,21 @@ const valid = [
     options: [{ customHOCs: ["observer"] }],
   },
   {
+    name: "Curried HOC with styled (object form)",
+    code: "export const Flex = styled('div')({display: 'flex'});",
+    options: [{ customHOCs: ["styled"] }],
+  },
+  {
+    name: "Curried HOC with styled (template literal form)",
+    code: "export const Flex = styled('div')`display: flex;`;",
+    options: [{ customHOCs: ["styled"] }],
+  },
+  {
+    name: "Curried HOC only first call",
+    code: "export const Flex = styled('div');",
+    options: [{ customHOCs: ["styled"] }],
+  },
+  {
     name: "Local constant with component casing and non component function",
     code: "const SomeConstant = 42; export function someUtility() { return SomeConstant }",
   },

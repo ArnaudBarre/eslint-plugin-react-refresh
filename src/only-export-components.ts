@@ -82,11 +82,18 @@ export const onlyExportComponents: TSESLint.RuleModule<
       if (!init) return false;
       const jsInit = skipTSWrapper(init);
       if (jsInit.type === "ArrowFunctionExpression") return true;
-      if (
-        jsInit.type === "CallExpression"
-        && jsInit.callee.type === "Identifier"
-      ) {
-        return reactHOCs.includes(jsInit.callee.name);
+      if (jsInit.type === "CallExpression") {
+        // memo(...)
+        if (jsInit.callee.type === "Identifier") {
+          return reactHOCs.includes(jsInit.callee.name);
+        }
+        // Curried HOC: styled('div')({...})
+        if (
+          jsInit.callee.type === "CallExpression"
+          && jsInit.callee.callee.type === "Identifier"
+        ) {
+          return reactHOCs.includes(jsInit.callee.callee.name);
+        }
       }
       return false;
     };
