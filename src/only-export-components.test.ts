@@ -1,9 +1,7 @@
 import parser from "@typescript-eslint/parser";
 import { RuleTester } from "eslint";
-import {
-  onlyExportComponents,
-  type Options,
-} from "./only-export-components.ts";
+import { onlyExportComponents } from "./only-export-components.ts";
+import type { OnlyExportComponentsOptions } from "./types.d.ts";
 
 const ruleTester = new RuleTester({ languageOptions: { parser } });
 
@@ -11,7 +9,7 @@ const valid: {
   name: string;
   code: string;
   filename?: string;
-  options?: Options;
+  options?: OnlyExportComponentsOptions;
 }[] = [
   {
     name: "Direct export named component",
@@ -72,6 +70,27 @@ const valid: {
   {
     name: "styled components",
     code: "export const Foo = () => {}; export const Bar = styled.div`padding-bottom: 6px;`;",
+    options: { customHOCs: ["styled"] },
+  },
+  {
+    name: "styled components",
+    code: "export const Foo = () => {}; export const Flex = styled.div({ display: 'flex' });",
+    options: { customHOCs: ["styled"] },
+  },
+  {
+    name: "Curried HOC with styled (object form)",
+    code: "export const Foo = () => {}; export const Flex = styled('div')({display: 'flex'});",
+    options: { customHOCs: ["styled"] },
+  },
+  {
+    name: "Curried HOC with styled (template literal form)",
+    code: "export const Foo = () => {}; export const Flex = styled('div')`display: flex;`;",
+    options: { customHOCs: ["styled"] },
+  },
+  {
+    name: "Curried HOC only first call",
+    code: "export const Foo = () => {}; export const Flex = styled('div');",
+    options: { customHOCs: ["styled"] },
   },
   {
     name: "Direct export variable",
@@ -240,6 +259,22 @@ const valid: {
     code: "const RootComponent = () => {}; export const Route = createRootRoute()({ component: RootComponent });",
     options: { customHOCs: ["createRootRoute"] },
   },
+  {
+    name: "Rename export",
+    code: "export const Link = () => {}; export const RenamedLink = Link;",
+  },
+  {
+    name: "Type instantiation expression",
+    code: "export const Link = () => {}; export const TypedLink = Link<RouteParams>;",
+  },
+  {
+    name: "Class component",
+    code: "export class MyComponent extends React.Component<Props, State> { render() { return <div>Hello</div>; } }",
+  },
+  {
+    name: "Export default class component",
+    code: "export default class MyComponent extends Component { render() { return <div>Hello</div>; } }",
+  },
 ];
 
 const invalid: {
@@ -247,7 +282,7 @@ const invalid: {
   code: string;
   errorId: string;
   filename?: string;
-  options?: Options;
+  options?: OnlyExportComponentsOptions;
 }[] = [
   {
     name: "Component and function",
@@ -371,6 +406,16 @@ const invalid: {
     name: "Don't allow ternaries if a branch is not a component",
     code: "export const DevtoolsNotComponentInProd = import.meta.env.PROD ? null : React.lazy(() => import('devtools')); export const OtherComponent = () => {};",
     errorId: "namedExport",
+  },
+  {
+    name: "Component and non React Class component",
+    code: "export const Foo = () => {}; export class MyComponent { bar() { return <div>Hello</div>; } }",
+    errorId: "namedExport",
+  },
+  {
+    name: "Export default anonymous class component",
+    code: "export default class { bar() { return <div>Hello</div>; } }",
+    errorId: "anonymousExport",
   },
 ];
 

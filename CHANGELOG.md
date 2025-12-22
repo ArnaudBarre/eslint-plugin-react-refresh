@@ -2,6 +2,26 @@
 
 ## 0.5.0
 
+### Breaking changes
+
+- Packages now ships as ESM and requires ESLint 9 + node 20
+- Validation of HOCs calls is now more strict, you may need to add some HOCs to the `customHOCs` option
+- Configs are now functions that return the config object with passed options merged with the base options of that config
+
+Example:
+
+```js
+import { defineConfig } from "eslint/config";
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default defineConfig(
+  /* Main config */
+  reactRefresh.configs.vite({ customHOCs: ["connect"] }),
+);
+```
+
+### Why
+
 This version follows a revamp of the internal logic to better make the difference between random call expressions like `export const Enum = Object.keys(Record)` and actual React HOC calls like `export const MemoComponent = memo(Component)`. (fixes [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93))
 
 The rule now handles ternaries and patterns like `export default customHOC(props)(Component)` which makes it able to correctly support files like [this one](https://github.com/eclipse-apoapsis/ort-server/blob/ddfc624ce71b9f2ca6bad9b8c82d4c3249dd9c8b/ui/src/routes/__root.tsx) given this config:

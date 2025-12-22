@@ -1,10 +1,20 @@
-type Config = {
-  plugins: { "react-refresh": { rules: Record<string, any> } };
-  rules: Record<string, any>;
+type Rules = { "only-export-components": any };
+
+export type OnlyExportComponentsOptions = {
+  customHOCs?: string[];
+  allowExportNames?: string[];
+  allowConstantExport?: boolean;
+  checkJS?: boolean;
+};
+
+type Config = (options?: OnlyExportComponentsOptions) => {
+  name: string;
+  plugins: { "react-refresh": { rules: Rules } };
+  rules: Rules;
 };
 
 declare const _default: {
-  rules: Record<string, any>;
+  rules: Rules;
   configs: {
     recommended: Config;
     vite: Config;
@@ -12,4 +22,4 @@ declare const _default: {
   };
 };
 
-export = _default;
+export default _default;

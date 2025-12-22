@@ -15,7 +15,7 @@
     "experimentalOperatorPosition": "start"
   },
   "peerDependencies": {
-    "eslint": ">=8.40"
+    "eslint": ">=9"
   },
   "devDependencies": {
     "@arnaud-barre/eslint-config": "^6.1.2",
