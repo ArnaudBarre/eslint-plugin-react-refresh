@@ -5,8 +5,10 @@
 ### Breaking changes
 
 - Packages now ships as ESM and requires ESLint 9 + node 20
-- Validation of HOCs calls is now more strict, you may need to add some HOCs to the `customHOCs` option
+- Plugin is now exported under `<default>.plugin` instead of `<default>`. Named export have been removed.
 - Configs are now functions that return the config object with passed options merged with the base options of that config
+- `customHOCs` was renamed to `extraHOCs`
+- Validation of HOCs calls is now more strict, you may need to add some HOCs to the `extraHOCs` option
 
 Example:
 
@@ -16,8 +18,30 @@ import reactRefresh from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
-  reactRefresh.configs.vite({ customHOCs: ["connect"] }),
+  reactRefresh.configs.vite({ extraHOCs: ["someLibHOC"] }),
 );
+```
+
+Example without config:
+
+```js
+import { defineConfig } from "eslint/config";
+import reactRefresh from "eslint-plugin-react-refresh";
+
+export default defineConfig({
+  files: ["**/*.ts", "**/*.tsx"],
+  plugins: {
+    // other plugins
+    "react-refresh": reactRefresh.plugin,
+  },
+  rules: {
+    // other rules
+    "react-refresh/only-export-components": [
+      "warn",
+      { extraHOCs: ["someLibHOC"] },
+    ],
+  },
+});
 ```
 
 ### Why
@@ -30,22 +54,19 @@ The rule now handles ternaries and patterns like `export default customHOC(props
 {
   "react-refresh/only-export-components": [
     "warn",
-    { "customHOCs": ["createRootRouteWithContext"] }
+    { "extraHOCs": ["createRootRouteWithContext"] }
   ]
 }
 ```
 
 > [!NOTE]
-> Actually createRoute functions from TanStack Router are not React HOCs, they return route objects that [fake to be a memoized component](https://github.com/TanStack/router/blob/8628d0189412ccb8d3a01840aa18bac8295e18c8/packages/react-router/src/route.tsx#L263) but are not. When only doing `createRootRoute({ component: Foo })`, HMR will work fine, but as soon as you add a prop to the options that is not a React component, HMR will not work. I would recommend to avoid adding any TanStack function to `customHOCs` it you want to preserve good HMR in the long term. [Bluesky thread](https://bsky.app/profile/arnaud-barre.bsky.social/post/3ma5h5tf2sk2e).
+> Actually createRoute functions from TanStack Router are not React HOCs, they return route objects that [fake to be a memoized component](https://github.com/TanStack/router/blob/8628d0189412ccb8d3a01840aa18bac8295e18c8/packages/react-router/src/route.tsx#L263) but are not. When only doing `createRootRoute({ component: Foo })`, HMR will work fine, but as soon as you add a prop to the options that is not a React component, HMR will not work. I would recommend to avoid adding any TanStack function to `extraHOCs` it you want to preserve good HMR in the long term. [Bluesky thread](https://bsky.app/profile/arnaud-barre.bsky.social/post/3ma5h5tf2sk2e).
 
-Because I'm not 100% sure this new logic doesn't introduce any false positive, this is done in a major-like version. This also give me the occasion to remove the hardcoded `connect` from the rule. If you are using `connect` from `react-redux`, you should now add it to `customHOCs` like this:
+Because I'm not 100% sure this new logic doesn't introduce any false positive, this is done in a major-like version. This also give me the occasion to remove the hardcoded `connect` from the rule. If you are using `connect` from `react-redux`, you should now add it to `extraHOCs` like this:
 
 ```json
 {
-  "react-refresh/only-export-components": [
-    "warn",
-    { "customHOCs": ["connect"] }
-  ]
+  "react-refresh/only-export-components": ["warn", { "extraHOCs": ["connect"] }]
 }
 ```
 
@@ -122,7 +143,7 @@ export default observer(Foo);
 {
   "react-refresh/only-export-components": [
     "error",
-    { "customHOCs": ["observer"] }
+    { "extraHOCs": ["observer"] }
   ]
 }
 ```

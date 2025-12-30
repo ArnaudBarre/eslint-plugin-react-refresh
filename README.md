@@ -79,7 +79,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 export default defineConfig({
   // in main config for TSX/JSX source files
   plugins: {
-    "react-refresh": reactRefresh,
+    "react-refresh": reactRefresh.plugin,
   },
   rules: {
     "react-refresh/only-export-components": "error",
@@ -141,29 +141,29 @@ These options are all present on `react-refresh/only-exports-components`.
 
 ```ts
 interface Options {
-  customHOCs?: string[];
+  extraHOCs?: string[];
   allowExportNames?: string[];
   allowConstantExport?: boolean;
   checkJS?: boolean;
 }
 
 const defaultOptions: Options = {
-  customHOCs: [],
+  extraHOCs: [],
   allowExportNames: [],
   allowConstantExport: false,
   checkJS: false,
 };
 ```
 
-### customHOCs <small>(v0.4.15)</small>
+### extraHOCs <small>(v0.5.0)</small>
 
-If you're exporting a component wrapped in a custom HOC, you can use this option to avoid false positives.
+If you're exporting components wrapped in non built-in React HOC (memo, forwardRef, lazy), you can use this option to avoid false positives.
 
 ```json
 {
   "react-refresh/only-export-components": [
     "error",
-    { "customHOCs": ["observer", "withAuth"] }
+    { "extraHOCs": ["observer", "withAuth"] }
   ]
 }
 ```

@@ -1,11 +1,11 @@
 import { onlyExportComponents } from "./only-export-components.ts";
 import type { OnlyExportComponentsOptions } from "./types.d.ts";
 
-export const rules = {
-  "only-export-components": onlyExportComponents,
+const plugin = {
+  rules: {
+    "only-export-components": onlyExportComponents,
+  },
 };
-
-const plugin = { rules };
 
 const buildConfig =
   ({
@@ -26,7 +26,7 @@ const buildConfig =
     },
   });
 
-export const configs = {
+const configs = {
   recommended: buildConfig({ name: "recommended", baseOptions: {} }),
   vite: buildConfig({
     name: "vite",
@@ -62,5 +62,4 @@ export const configs = {
   }),
 };
 
-// Probably not needed, but keep for backwards compatibility
-export default { rules, configs };
+export default { plugin, configs };

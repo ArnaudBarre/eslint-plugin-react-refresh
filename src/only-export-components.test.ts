@@ -70,27 +70,27 @@ const valid: {
   {
     name: "styled components",
     code: "export const Foo = () => {}; export const Bar = styled.div`padding-bottom: 6px;`;",
-    options: { customHOCs: ["styled"] },
+    options: { extraHOCs: ["styled"] },
   },
   {
     name: "styled components",
     code: "export const Foo = () => {}; export const Flex = styled.div({ display: 'flex' });",
-    options: { customHOCs: ["styled"] },
+    options: { extraHOCs: ["styled"] },
   },
   {
     name: "Curried HOC with styled (object form)",
     code: "export const Foo = () => {}; export const Flex = styled('div')({display: 'flex'});",
-    options: { customHOCs: ["styled"] },
+    options: { extraHOCs: ["styled"] },
   },
   {
     name: "Curried HOC with styled (template literal form)",
     code: "export const Foo = () => {}; export const Flex = styled('div')`display: flex;`;",
-    options: { customHOCs: ["styled"] },
+    options: { extraHOCs: ["styled"] },
   },
   {
     name: "Curried HOC only first call",
     code: "export const Foo = () => {}; export const Flex = styled('div');",
-    options: { customHOCs: ["styled"] },
+    options: { extraHOCs: ["styled"] },
   },
   {
     name: "Direct export variable",
@@ -210,7 +210,7 @@ const valid: {
   {
     name: "Allow connect from react-redux",
     code: "const MyComponent = () => {}; export default connect(() => ({}))(MyComponent);",
-    options: { customHOCs: ["connect"] },
+    options: { extraHOCs: ["connect"] },
   },
   {
     name: "Two components, one of them with 'Context' in its name",
@@ -227,7 +227,7 @@ const valid: {
   {
     name: "Custom HOCs like mobx's observer",
     code: "const MyComponent = () => {}; export default observer(MyComponent);",
-    options: { customHOCs: ["observer"] },
+    options: { extraHOCs: ["observer"] },
   },
   {
     name: "Local constant with component casing and non component function",
@@ -257,7 +257,7 @@ const valid: {
   {
     name: "TanStack Router",
     code: "const RootComponent = () => {}; export const Route = createRootRoute()({ component: RootComponent });",
-    options: { customHOCs: ["createRootRoute"] },
+    options: { extraHOCs: ["createRootRoute"] },
   },
   {
     name: "Rename export",

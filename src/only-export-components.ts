@@ -22,7 +22,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       anonymousExport:
         "Fast refresh can't handle anonymous components. Add a name to your export.",
       localComponents:
-        "Fast refresh only works when a file only exports components. Move your component(s) to a separate file. If all exports are HOCs, add them to the `customHOCs` option.",
+        "Fast refresh only works when a file only exports components. Move your component(s) to a separate file. If all exports are HOCs, add them to the `extraHOCs` option.",
       noExport:
         "Fast refresh only works when a file has exports. Move your component(s) to a separate file.",
       reactContext:
@@ -33,7 +33,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       {
         type: "object",
         properties: {
-          customHOCs: { type: "array", items: { type: "string" } },
+          extraHOCs: { type: "array", items: { type: "string" } },
           allowExportNames: { type: "array", items: { type: "string" } },
           allowConstantExport: { type: "boolean" },
           checkJS: { type: "boolean" },
@@ -45,7 +45,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
   defaultOptions: [],
   create: (context) => {
     const {
-      customHOCs = [],
+      extraHOCs = [],
       allowExportNames,
       allowConstantExport = false,
       checkJS = false,
@@ -70,7 +70,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       ? new Set(allowExportNames)
       : undefined;
 
-    const validHOCs = ["memo", "forwardRef", "lazy", ...customHOCs];
+    const validHOCs = ["memo", "forwardRef", "lazy", ...extraHOCs];
     const getHocName = (
       node: TSESTree.CallExpression | TSESTree.TaggedTemplateExpression,
     ): string | undefined => {

@@ -1,7 +1,7 @@
 type Rules = { "only-export-components": any };
 
 export type OnlyExportComponentsOptions = {
-  customHOCs?: string[];
+  extraHOCs?: string[];
   allowExportNames?: string[];
   allowConstantExport?: boolean;
   checkJS?: boolean;
@@ -14,7 +14,9 @@ type Config = (options?: OnlyExportComponentsOptions) => {
 };
 
 declare const _default: {
-  rules: Rules;
+  plugin: {
+    rules: Rules;
+  };
   configs: {
     recommended: Config;
     vite: Config;
