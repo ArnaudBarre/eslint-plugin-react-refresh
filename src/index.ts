@@ -1,11 +1,10 @@
 import { onlyExportComponents } from "./only-export-components.ts";
 import type { OnlyExportComponentsOptions } from "./types.d.ts";
 
-const plugin = {
-  rules: {
-    "only-export-components": onlyExportComponents,
-  },
+const rules = {
+  "only-export-components": onlyExportComponents,
 };
+const plugin = { rules };
 
 const buildConfig =
   ({
@@ -62,4 +61,14 @@ const configs = {
   }),
 };
 
-export default { plugin, configs };
+export const reactRefresh = { plugin, configs };
+
+/** @deprecated, use the reactRefresh export instead */
+export default {
+  rules,
+  configs: {
+    recommended: configs.recommended(),
+    vite: configs.vite(),
+    next: configs.next(),
+  },
+};

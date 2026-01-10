@@ -34,11 +34,11 @@ This plugin provides a single rule, `react-refresh/only-export-components`. Ther
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
-  reactRefresh.configs.recommended(), // Or reactRefresh.configs.vite for Vite users
+  reactRefresh.configs.recommended(),
 );
 ```
 
@@ -48,7 +48,7 @@ This enables the `allowConstantExport` option which is supported by Vite React p
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
@@ -62,7 +62,7 @@ This allows exports like `fetchCache` and `revalidate` which are used in Page or
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
@@ -74,7 +74,7 @@ export default defineConfig(
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig({
   // in main config for TSX/JSX source files

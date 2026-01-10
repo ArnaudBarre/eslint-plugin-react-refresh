@@ -13,7 +13,7 @@ type Config = (options?: OnlyExportComponentsOptions) => {
   rules: Rules;
 };
 
-declare const _default: {
+export const reactRefresh: {
   plugin: {
     rules: Rules;
   };
@@ -23,5 +23,3 @@ declare const _default: {
     next: Config;
   };
 };
-
-export default _default;

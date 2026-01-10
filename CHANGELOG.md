@@ -5,7 +5,7 @@
 ### Breaking changes
 
 - Packages now ships as ESM and requires ESLint 9 + node 20
-- Plugin is now exported under `<default>.plugin` instead of `<default>`. Named export have been removed.
+- Plugin is now exported under `reactRefresh.plugin` instead of the default export (which has been deprecated).
 - Configs are now functions that return the config object with passed options merged with the base options of that config
 - `customHOCs` was renamed to `extraHOCs`
 - Validation of HOCs calls is now more strict, you may need to add some HOCs to the `extraHOCs` option
@@ -14,7 +14,7 @@ Example:
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
@@ -26,7 +26,7 @@ Example without config:
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig({
   files: ["**/*.ts", "**/*.tsx"],
