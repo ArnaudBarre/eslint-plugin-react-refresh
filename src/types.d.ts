@@ -7,7 +7,12 @@ export type OnlyExportComponentsOptions = {
   checkJS?: boolean;
 };
 
-type Config = (options?: OnlyExportComponentsOptions) => {
+type Config = {
+  name: string;
+  plugins: { "react-refresh": { rules: Rules } };
+  rules: Rules;
+};
+type ConfigFn = (options?: OnlyExportComponentsOptions) => {
   name: string;
   plugins: { "react-refresh": { rules: Rules } };
   rules: Rules;
@@ -18,8 +23,18 @@ export const reactRefresh: {
     rules: Rules;
   };
   configs: {
+    recommended: ConfigFn;
+    vite: ConfigFn;
+    next: ConfigFn;
+  };
+};
+
+declare const _default: {
+  rules: Rules;
+  configs: {
     recommended: Config;
     vite: Config;
     next: Config;
   };
 };
+export default _default;

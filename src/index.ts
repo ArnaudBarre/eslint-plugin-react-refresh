@@ -63,7 +63,7 @@ const configs = {
 
 export const reactRefresh = { plugin, configs };
 
-/** @deprecated, use the reactRefresh export instead */
+/** Prefer reactRefresh export which exposed configs as functions */
 export default {
   rules,
   configs: {
