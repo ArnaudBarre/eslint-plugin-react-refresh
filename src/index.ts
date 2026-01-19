@@ -31,7 +31,6 @@ export const configs = {
         {
           allowExportNames: [
             // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
-            "experimental_ppr",
             "dynamic",
             "dynamicParams",
             "revalidate",
