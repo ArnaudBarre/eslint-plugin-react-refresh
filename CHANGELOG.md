@@ -1,5 +1,76 @@
 # Changelog
 
+## 0.5.0
+
+### Breaking changes
+
+- The package now ships as ESM and requires ESLint 9 + node 20. Because legacy config doesn't support ESM, this requires to use [flat config](https://eslint.org/docs/latest/use/configure/migration-guide)
+- A new `reactRefresh` export is available and prefered over the default export. It's an object with two properties:
+  - `plugin`: The plugin object with the rules
+  - `configs`: An object containing configuration presets, each exposed as a function. These functions accept your custom options, merge them with sensible defaults for that config, and return the final config object.
+- `customHOCs` option was renamed to `extraHOCs`
+- Validation of HOCs calls is now more strict, you may need to add some HOCs to the `extraHOCs` option
+
+Config example:
+
+```js
+import { defineConfig } from "eslint/config";
+import { reactRefresh } from "eslint-plugin-react-refresh";
+
+export default defineConfig(
+  /* Main config */
+  reactRefresh.configs.vite({ extraHOCs: ["someLibHOC"] }),
+);
+```
+
+Config example without config:
+
+```js
+import { defineConfig } from "eslint/config";
+import { reactRefresh } from "eslint-plugin-react-refresh";
+
+export default defineConfig({
+  files: ["**/*.ts", "**/*.tsx"],
+  plugins: {
+    // other plugins
+    "react-refresh": reactRefresh.plugin,
+  },
+  rules: {
+    // other rules
+    "react-refresh/only-export-components": [
+      "warn",
+      { extraHOCs: ["someLibHOC"] },
+    ],
+  },
+});
+```
+
+### Why
+
+This version follows a revamp of the internal logic to better make the difference between random call expressions like `export const Enum = Object.keys(Record)` and actual React HOC calls like `export const MemoComponent = memo(Component)`. (fixes [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93))
+
+The rule now handles ternaries and patterns like `export default customHOC(props)(Component)` which makes it able to correctly support files like [this one](https://github.com/eclipse-apoapsis/ort-server/blob/ddfc624ce71b9f2ca6bad9b8c82d4c3249dd9c8b/ui/src/routes/__root.tsx) given this config:
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "warn",
+    { "extraHOCs": ["createRootRouteWithContext"] }
+  ]
+}
+```
+
+> [!NOTE]
+> Actually createRoute functions from TanStack Router are not React HOCs, they return route objects that [fake to be a memoized component](https://github.com/TanStack/router/blob/8628d0189412ccb8d3a01840aa18bac8295e18c8/packages/react-router/src/route.tsx#L263) but are not. When only doing `createRootRoute({ component: Foo })`, HMR will work fine, but as soon as you add a prop to the options that is not a React component, HMR will not work. I would recommend to avoid adding any TanStack function to `extraHOCs` it you want to preserve good HMR in the long term. [Bluesky thread](https://bsky.app/profile/arnaud-barre.bsky.social/post/3ma5h5tf2sk2e).
+
+Because I'm not 100% sure this new logic doesn't introduce any false positive, this is done in a major-like version. This also give me the occasion to remove the hardcoded `connect` from the rule. If you are using `connect` from `react-redux`, you should now add it to `extraHOCs` like this:
+
+```json
+{
+  "react-refresh/only-export-components": ["warn", { "extraHOCs": ["connect"] }]
+}
+```
+
 ## 0.4.26
 
 - Revert changes to fix [#93](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/93) (fixes [#95](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/95))
@@ -73,7 +144,7 @@ export default observer(Foo);
 {
   "react-refresh/only-export-components": [
     "error",
-    { "customHOCs": ["observer"] }
+    { "extraHOCs": ["observer"] }
   ]
 }
 ```

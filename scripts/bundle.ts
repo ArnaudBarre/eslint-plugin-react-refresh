@@ -12,7 +12,8 @@ await build({
   entryPoints: ["src/index.ts"],
   outdir: "dist",
   platform: "node",
-  target: "node14",
+  format: "esm",
+  target: "node20",
   external: Object.keys(packageJSON.peerDependencies),
 });
 
@@ -27,12 +28,16 @@ writeFileSync(
       description:
         "Validate that your components can safely be updated with Fast Refresh",
       version: packageJSON.version,
-      type: "commonjs",
+      type: "module",
       author: "Arnaud Barré (https://github.com/ArnaudBarre)",
       license: packageJSON.license,
       repository: "github:ArnaudBarre/eslint-plugin-react-refresh",
-      main: "index.js",
-      types: "index.d.ts",
+      exports: {
+        ".": {
+          types: "./index.d.ts",
+          default: "./index.js",
+        },
+      },
       keywords: [
         "eslint",
         "eslint-plugin",

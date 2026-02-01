@@ -34,11 +34,11 @@ This plugin provides a single rule, `react-refresh/only-export-components`. Ther
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
-  reactRefresh.configs.recommended,
+  reactRefresh.configs.recommended(),
 );
 ```
 
@@ -48,25 +48,25 @@ This enables the `allowConstantExport` option which is supported by Vite React p
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
-  reactRefresh.configs.vite,
+  reactRefresh.configs.vite(),
 );
 ```
 
-### Next config <small>(v0.4.21)</small>
+### Next config
 
 This allows exports like `fetchCache` and `revalidate` which are used in Page or Layout components and don't trigger a full page reload.
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig(
   /* Main config */
-  reactRefresh.configs.next,
+  reactRefresh.configs.next(),
 );
 ```
 
@@ -74,28 +74,17 @@ export default defineConfig(
 
 ```js
 import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 
 export default defineConfig({
   // in main config for TSX/JSX source files
   plugins: {
-    "react-refresh": reactRefresh,
+    "react-refresh": reactRefresh.plugin,
   },
   rules: {
     "react-refresh/only-export-components": "error",
   },
 });
-```
-
-### Legacy config
-
-```jsonc
-{
-  "plugins": ["react-refresh"],
-  "rules": {
-    "react-refresh/only-export-components": "error",
-  },
-}
 ```
 
 ## Examples
@@ -152,18 +141,31 @@ These options are all present on `react-refresh/only-exports-components`.
 
 ```ts
 interface Options {
+  extraHOCs?: string[];
   allowExportNames?: string[];
   allowConstantExport?: boolean;
-  customHOCs?: string[];
   checkJS?: boolean;
 }
 
 const defaultOptions: Options = {
+  extraHOCs: [],
   allowExportNames: [],
   allowConstantExport: false,
-  customHOCs: [],
   checkJS: false,
 };
+```
+
+### extraHOCs <small>(v0.5.0)</small>
+
+If you're exporting components wrapped in non built-in React HOC (memo, forwardRef, lazy), you can use this option to avoid false positives.
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "error",
+    { "extraHOCs": ["observer", "withAuth"] }
+  ]
+}
 ```
 
 ### allowExportNames <small>(v0.4.4)</small>
@@ -216,18 +218,5 @@ If you're using JSX inside `.js` files (which I don't recommend because it force
 ```json
 {
   "react-refresh/only-export-components": ["error", { "checkJS": true }]
-}
-```
-
-### customHOCs <small>(v0.4.15)</small>
-
-If you're exporting a component wrapped in a custom HOC, you can use this option to avoid false positives.
-
-```json
-{
-  "react-refresh/only-export-components": [
-    "error",
-    { "customHOCs": ["observer", "withAuth"] }
-  ]
 }
 ```

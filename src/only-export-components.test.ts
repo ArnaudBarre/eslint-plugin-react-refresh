@@ -1,10 +1,16 @@
 import parser from "@typescript-eslint/parser";
 import { RuleTester } from "eslint";
 import { onlyExportComponents } from "./only-export-components.ts";
+import type { OnlyExportComponentsOptions } from "./types.d.ts";
 
 const ruleTester = new RuleTester({ languageOptions: { parser } });
 
-const valid = [
+const valid: {
+  name: string;
+  code: string;
+  filename?: string;
+  options?: OnlyExportComponentsOptions;
+}[] = [
   {
     name: "Direct export named component",
     code: "export function Foo() {};",
@@ -64,6 +70,27 @@ const valid = [
   {
     name: "styled components",
     code: "export const Foo = () => {}; export const Bar = styled.div`padding-bottom: 6px;`;",
+    options: { extraHOCs: ["styled"] },
+  },
+  {
+    name: "styled components",
+    code: "export const Foo = () => {}; export const Flex = styled.div({ display: 'flex' });",
+    options: { extraHOCs: ["styled"] },
+  },
+  {
+    name: "Curried HOC with styled (object form)",
+    code: "export const Foo = () => {}; export const Flex = styled('div')({display: 'flex'});",
+    options: { extraHOCs: ["styled"] },
+  },
+  {
+    name: "Curried HOC with styled (template literal form)",
+    code: "export const Foo = () => {}; export const Flex = styled('div')`display: flex;`;",
+    options: { extraHOCs: ["styled"] },
+  },
+  {
+    name: "Curried HOC only first call",
+    code: "export const Foo = () => {}; export const Flex = styled('div');",
+    options: { extraHOCs: ["styled"] },
   },
   {
     name: "Direct export variable",
@@ -133,48 +160,48 @@ const valid = [
     name: "Mixed export in JS without react import",
     code: "export const foo = () => {}; export const Bar = () => {};",
     filename: "Test.js",
-    options: [{ checkJS: true }],
+    options: { checkJS: true },
   },
   {
     name: "Component and number constant with allowConstantExport",
     code: "export const foo = 4; export const Bar = () => {};",
-    options: [{ allowConstantExport: true }],
+    options: { allowConstantExport: true },
   },
   {
     name: "Component and negative number constant with allowConstantExport",
     code: "export const foo = -4; export const Bar = () => {};",
-    options: [{ allowConstantExport: true }],
+    options: { allowConstantExport: true },
   },
   {
     name: "Component and string constant with allowConstantExport",
     code: "export const CONSTANT = 'Hello world'; export const Foo = () => {};",
-    options: [{ allowConstantExport: true }],
+    options: { allowConstantExport: true },
   },
   {
     name: "Component and template literal with allowConstantExport",
     // eslint-disable-next-line no-template-curly-in-string
     code: "const foo = 'world'; export const CONSTANT = `Hello ${foo}`; export const Foo = () => {};",
-    options: [{ allowConstantExport: true }],
+    options: { allowConstantExport: true },
   },
   {
     name: "Component and allowed export",
     code: "export const loader = () => {}; export const Bar = () => {};",
-    options: [{ allowExportNames: ["loader", "meta"] }],
+    options: { allowExportNames: ["loader", "meta"] },
   },
   {
     name: "Component and allowed function export",
     code: "export function loader() {}; export const Bar = () => {};",
-    options: [{ allowExportNames: ["loader", "meta"] }],
+    options: { allowExportNames: ["loader", "meta"] },
   },
   {
     name: "Only allowed exports without component",
     code: "export const loader = () => {}; export const meta = { title: 'Home' };",
-    options: [{ allowExportNames: ["loader", "meta"] }],
+    options: { allowExportNames: ["loader", "meta"] },
   },
   {
     name: "Component and viewport export for Next.js",
     code: "export const viewport = { width: 'device-width', initialScale: 1 }; export const Page = () => {};",
-    options: [{ allowExportNames: ["viewport"] }],
+    options: { allowExportNames: ["viewport"] },
   },
   {
     name: "Export as default",
@@ -183,6 +210,7 @@ const valid = [
   {
     name: "Allow connect from react-redux",
     code: "const MyComponent = () => {}; export default connect(() => ({}))(MyComponent);",
+    options: { extraHOCs: ["connect"] },
   },
   {
     name: "Two components, one of them with 'Context' in its name",
@@ -199,7 +227,7 @@ const valid = [
   {
     name: "Custom HOCs like mobx's observer",
     code: "const MyComponent = () => {}; export default observer(MyComponent);",
-    options: [{ customHOCs: ["observer"] }],
+    options: { extraHOCs: ["observer"] },
   },
   {
     name: "Local constant with component casing and non component function",
@@ -208,7 +236,7 @@ const valid = [
   {
     name: "Component and as const constant with allowConstantExport",
     code: "export const MyComponent = () => {}; export const MENU_WIDTH = 232 as const;",
-    options: [{ allowConstantExport: true }],
+    options: { allowConstantExport: true },
   },
   {
     name: "Type assertion in memo export",
@@ -222,9 +250,40 @@ const valid = [
     name: "Nested memo HOC",
     code: "export const MyComponent = () => {}; export default memo(forwardRef(MyComponent));",
   },
+  {
+    name: "Allow ternaries if both branches are components",
+    code: "export const Devtools = import.meta.env.PROD ? () => null : React.lazy(() => import('devtools')); export const OtherComponent = () => {};",
+  },
+  {
+    name: "TanStack Router",
+    code: "const RootComponent = () => {}; export const Route = createRootRoute()({ component: RootComponent });",
+    options: { extraHOCs: ["createRootRoute"] },
+  },
+  {
+    name: "Rename export",
+    code: "export const Link = () => {}; export const RenamedLink = Link;",
+  },
+  {
+    name: "Type instantiation expression",
+    code: "export const Link = () => {}; export const TypedLink = Link<RouteParams>;",
+  },
+  {
+    name: "Class component",
+    code: "export class MyComponent extends React.Component<Props, State> { render() { return <div>Hello</div>; } }",
+  },
+  {
+    name: "Export default class component",
+    code: "export default class MyComponent extends Component { render() { return <div>Hello</div>; } }",
+  },
 ];
 
-const invalid = [
+const invalid: {
+  name: string;
+  code: string;
+  errorId: string;
+  filename?: string;
+  options?: OnlyExportComponentsOptions;
+}[] = [
   {
     name: "Component and function",
     code: "export const foo = () => {}; export const Bar = () => {};",
@@ -239,7 +298,7 @@ const invalid = [
     name: "Component and function with allowConstantExport",
     code: "export const foo = () => {}; export const Bar = () => {};",
     errorId: "namedExport",
-    options: [{ allowConstantExport: true }],
+    options: { allowConstantExport: true },
   },
   {
     name: "Component and variable (direct export)",
@@ -303,19 +362,19 @@ const invalid = [
      export const CONSTANT = 3; export const Foo = () => {};
     `,
     filename: "Test.js",
-    options: [{ checkJS: true }],
+    options: { checkJS: true },
     errorId: "namedExport",
   },
   {
     name: "export default compose",
-    code: "export default compose()(MainView);",
+    code: "const MainView = () => {}; export default compose()(MainView);",
     filename: "Test.jsx",
-    errorId: "anonymousExport",
+    errorId: "localComponents",
   },
   {
     name: "Component and export non in allowExportNames",
     code: "export const loader = () => {}; export const Bar = () => {}; export const foo = () => {};",
-    options: [{ allowExportNames: ["loader", "meta"] }],
+    options: { allowExportNames: ["loader", "meta"] },
     errorId: "namedExport",
   },
   {
@@ -336,7 +395,27 @@ const invalid = [
   {
     name: "should be invalid when custom HOC is used without adding it to the rule configuration",
     code: "const MyComponent = () => {}; export default observer(MyComponent);",
-    errorId: ["localComponents", "anonymousExport"],
+    errorId: "localComponents",
+  },
+  {
+    name: "Object.keys",
+    code: "const MyComponent = () => {}; export const ENUM = Object.keys(TABLE) as EnumType[];",
+    errorId: "localComponents",
+  },
+  {
+    name: "Don't allow ternaries if a branch is not a component",
+    code: "export const DevtoolsNotComponentInProd = import.meta.env.PROD ? null : React.lazy(() => import('devtools')); export const OtherComponent = () => {};",
+    errorId: "namedExport",
+  },
+  {
+    name: "Component and non React Class component",
+    code: "export const Foo = () => {}; export class MyComponent { bar() { return <div>Hello</div>; } }",
+    errorId: "namedExport",
+  },
+  {
+    name: "Export default anonymous class component",
+    code: "export default class { bar() { return <div>Hello</div>; } }",
+    errorId: "anonymousExport",
   },
 ];
 
@@ -349,14 +428,20 @@ const it = (name: string, cases: Parameters<typeof ruleTester.run>[2]) => {
   );
 };
 
-for (const { name, code, filename, options = [] } of valid) {
+for (const { name, code, filename, options } of valid) {
   it(name, {
-    valid: [{ filename: filename ?? "Test.jsx", code, options }],
+    valid: [
+      {
+        code,
+        filename: filename ?? "Test.tsx",
+        options: options ? [options] : [],
+      },
+    ],
     invalid: [],
   });
 }
 
-for (const { name, code, errorId, filename, options = [] } of invalid) {
+for (const { name, code, errorId, filename, options } of invalid) {
   it(name, {
     valid: [],
     invalid: [
@@ -366,7 +451,7 @@ for (const { name, code, errorId, filename, options = [] } of invalid) {
         errors: Array.isArray(errorId)
           ? errorId.map((messageId) => ({ messageId }))
           : [{ messageId: errorId }],
-        options,
+        options: options ? [options] : [],
       },
     ],
   });
