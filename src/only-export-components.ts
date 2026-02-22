@@ -299,9 +299,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
               : null;
             if (declaration?.type === "TSDeclareFunction") continue;
             hasExports = true;
-            if (declaration) {
-              handleExportDeclaration(declaration);
-            }
+            if (declaration) handleExportDeclaration(declaration);
             for (const specifier of node.specifiers) {
               handleExportIdentifier(
                 specifier.exported.type === "Identifier"
