@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Support false positives with TypeScript function overloading (fixes [#105](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/105))
+
 ## 0.5.0
 
 ### Breaking changes

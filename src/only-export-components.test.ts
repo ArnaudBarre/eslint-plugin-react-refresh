@@ -275,6 +275,13 @@ const valid: {
     name: "Export default class component",
     code: "export default class MyComponent extends Component { render() { return <div>Hello</div>; } }",
   },
+  {
+    name: "Direct export uppercase function",
+    code: `export function Button(props: PropsWithChildren<{ onClick: () => void }>): ReactNode;
+export function Button(props: PropsWithChildren): ReactNode {
+  return <button {...props}>{props.children}</button>;
+}`,
+  },
 ];
 
 const invalid: {

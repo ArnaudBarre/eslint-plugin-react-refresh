@@ -297,9 +297,13 @@ export const onlyExportComponents: TSESLint.RuleModule<
             }
           } else if (node.type === "ExportNamedDeclaration") {
             if (node.exportKind === "type") continue;
+            const declaration = node.declaration
+              ? skipTSWrapper(node.declaration)
+              : null;
+            if (declaration?.type === "TSDeclareFunction") continue;
             hasExports = true;
-            if (node.declaration) {
-              handleExportDeclaration(skipTSWrapper(node.declaration));
+            if (declaration) {
+              handleExportDeclaration(declaration);
             }
             for (const specifier of node.specifiers) {
               handleExportIdentifier(
