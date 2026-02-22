@@ -276,11 +276,16 @@ const valid: {
     code: "export default class MyComponent extends Component { render() { return <div>Hello</div>; } }",
   },
   {
-    name: "Direct export uppercase function",
+    name: "Function overloading",
     code: `export function Button(props: PropsWithChildren<{ onClick: () => void }>): ReactNode;
 export function Button(props: PropsWithChildren): ReactNode {
   return <button {...props}>{props.children}</button>;
 }`,
+  },
+  {
+    name: "Nested function calls for extraHOCs",
+    code: "export const Component = styled('div').attrs({})`display: flex;`",
+    options: { extraHOCs: ["styled"] },
   },
 ];
 

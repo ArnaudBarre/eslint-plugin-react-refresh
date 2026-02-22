@@ -78,10 +78,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       // react-redux: connect(mapStateToProps, mapDispatchToProps)(...);
       // TanStack: createRootRoute()({ component: Foo });
       // styled-components: styled('div')`display: flex;`; or styled('div')({ display: 'flex' });
-      if (
-        callee.type === "CallExpression"
-        && callee.callee.type === "Identifier"
-      ) {
+      if (callee.type === "CallExpression") {
         return getHocName(callee);
       }
       // React.memo(...)
