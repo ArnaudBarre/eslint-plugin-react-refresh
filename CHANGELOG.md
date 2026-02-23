@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- Support nested function calls for extraHOCs (actually fixes [#104](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/104))
+
 ## 0.5.1
 
 - Mark ESLint v10 as supported

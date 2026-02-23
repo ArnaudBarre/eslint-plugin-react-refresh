@@ -284,7 +284,7 @@ export function Button(props: PropsWithChildren): ReactNode {
   },
   {
     name: "Nested function calls for extraHOCs",
-    code: "export const Component = styled('div').attrs({})`display: flex;`",
+    code: "export const Link = () => {}; export const Styles = styled('div').attrs((props) => ({ className: 'form-control' }))``;",
     options: { extraHOCs: ["styled"] },
   },
 ];

@@ -96,6 +96,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
         ) {
           return callee.object.name;
         }
+        if (callee.object.type === "CallExpression") {
+          return getHocName(callee.object);
+        }
       }
 
       // memo(...)
