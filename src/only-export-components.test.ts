@@ -287,6 +287,18 @@ export function Button(props: PropsWithChildren): ReactNode {
     code: "export const Link = () => {}; export const Styles = styled('div').attrs((props) => ({ className: 'form-control' }))``;",
     options: { extraHOCs: ["styled"] },
   },
+  {
+    name: "PascalCase class exported via export { Name } is not a component",
+    code: "class TimeObject { constructor() { this.years = {}; this.total = 0; } } const calcAmount = () => {}; export { calcAmount, TimeObject };",
+  },
+  {
+    name: "PascalCase class component exported via export { Name }",
+    code: "class MyComponent extends React.Component { render() { return null; } } export { MyComponent };",
+  },
+  {
+    name: "Variable with init exported via export { Name }",
+    code: "const Foo = () => {}; export { Foo };",
+  },
 ];
 
 const invalid: {
@@ -428,6 +440,11 @@ const invalid: {
     name: "Export default anonymous class component",
     code: "export default class { bar() { return <div>Hello</div>; } }",
     errorId: "anonymousExport",
+  },
+  {
+    name: "Class component and non-component via export { }",
+    code: "class MyComponent extends React.Component { render() { return null; } } const foo = () => {}; export { MyComponent, foo };",
+    errorId: "namedExport",
   },
 ];
 

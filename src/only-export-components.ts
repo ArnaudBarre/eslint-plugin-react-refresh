@@ -304,12 +304,44 @@ export const onlyExportComponents: TSESLint.RuleModule<
             hasExports = true;
             if (declaration) handleExportDeclaration(declaration);
             for (const specifier of node.specifiers) {
-              handleExportIdentifier(
+              const exportedNode =
                 specifier.exported.type === "Identifier"
-                  && specifier.exported.name === "default"
+                && specifier.exported.name === "default"
                   ? specifier.local
-                  : specifier.exported,
+                  : specifier.exported;
+
+              const scope = context.sourceCode.getScope(node);
+              const variable = scope.variables.find(
+                (v) => v.name === specifier.local.name,
               );
+              const def = variable?.defs[0];
+
+              if (def?.type === "ClassName") {
+                const classNode =
+                  def.node as unknown as TSESTree.ClassDeclaration;
+                if (
+                  reactComponentNameRE.test(exportedNode.name ?? "")
+                  && classNode.superClass !== null
+                  && classNode.body.body.some(
+                    (item) =>
+                      item.type === "MethodDefinition"
+                      && item.key.type === "Identifier"
+                      && item.key.name === "render",
+                  )
+                ) {
+                  hasReactExport = true;
+                } else {
+                  nonComponentExports.push(exportedNode);
+                }
+              } else if (
+                def?.type === "Variable"
+                && def.node.type === "VariableDeclarator"
+                && def.node.init !== null
+              ) {
+                handleExportIdentifier(exportedNode, def.node.init);
+              } else {
+                handleExportIdentifier(exportedNode);
+              }
             }
           } else if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {

@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "eslint-plugin-react-refresh",
@@ -16,7 +17,7 @@
         "typescript": "~5.9",
       },
       "peerDependencies": {
-        "eslint": ">=9",
+        "eslint": "^9 || ^10",
       },
     },
   },
