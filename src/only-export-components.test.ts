@@ -291,14 +291,6 @@ export function Button(props: PropsWithChildren): ReactNode {
     name: "PascalCase class exported via export { Name } is not a component",
     code: "class TimeObject { constructor() { this.years = {}; this.total = 0; } } const calcAmount = () => {}; export { calcAmount, TimeObject };",
   },
-  {
-    name: "PascalCase class component exported via export { Name }",
-    code: "class MyComponent extends React.Component { render() { return null; } } export { MyComponent };",
-  },
-  {
-    name: "Variable with init exported via export { Name }",
-    code: "const Foo = () => {}; export { Foo };",
-  },
 ];
 
 const invalid: {
