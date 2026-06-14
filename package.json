@@ -1,15 +1,15 @@
 {
   "name": "eslint-plugin-react-refresh",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "build": "scripts/bundle.ts",
     "test": "bun test",
     "lint": "eslint --max-warnings 0",
-    "prettier": "bun prettier-ci --write",
-    "prettier-ci": "prettier --ignore-path=.gitignore --check '**/*.{js,ts,json,md,yml}'",
-    "ci": "tsl && bun lint && bun prettier-ci && bun test && bun run build && cd dist && publint"
+    "format": "bun format-ci --write",
+    "format-ci": "prettier --ignore-path=.gitignore --check '**/*.{js,ts,json,md,yml}'",
+    "check": "tsl && bun lint && bun format-ci && bun test && bun run build && cd dist && publint"
   },
   "prettier": {
     "experimentalOperatorPosition": "start"

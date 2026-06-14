@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3
+
+- Fix check for non component class exported via `export { }` [#110](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/110) (fixes [#109](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/109))
+
 ## 0.5.2
 
 - Support nested function calls for extraHOCs (actually fixes [#104](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/104))
