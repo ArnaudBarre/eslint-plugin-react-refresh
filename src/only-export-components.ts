@@ -304,6 +304,16 @@ export const onlyExportComponents: TSESLint.RuleModule<
             hasExports = true;
             if (declaration) handleExportDeclaration(declaration);
             for (const specifier of node.specifiers) {
+              if (specifier.local.type === "Identifier") {
+                const scope = context.sourceCode.getScope(node);
+                const localName = specifier.local.name;
+                const def = scope.variables.find((v) => v.name === localName)
+                  ?.defs[0];
+                if (def?.type === "ClassName") {
+                  handleExportDeclaration(def.node);
+                  continue;
+                }
+              }
               handleExportIdentifier(
                 specifier.exported.type === "Identifier"
                   && specifier.exported.name === "default"
