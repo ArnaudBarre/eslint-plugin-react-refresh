@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4
+
+- Add `instant` to `allowExportNames` in Next config [#112](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/112)
+
 ## 0.5.3
 
 - Fix check for non component class exported via `export { }` [#110](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/110) (fixes [#109](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/109))
