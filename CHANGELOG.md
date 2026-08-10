@@ -2,7 +2,7 @@
 
 ## 0.5.4
 
-- Add `instant` to `allowExportNames` in Next config
+- Add `instant` to `allowExportNames` in Next config [#112](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/112)
 
 ## 0.5.3
 
