@@ -291,6 +291,10 @@ export function Button(props: PropsWithChildren): ReactNode {
     name: "PascalCase class exported via export { Name } is not a component",
     code: "class TimeObject { constructor() { this.years = {}; this.total = 0; } } const calcAmount = () => {}; export { calcAmount, TimeObject };",
   },
+  {
+    name: "SCREAMING_SNAKE_CASE constant and class exported via export { Name }",
+    code: "const ENTITY_TYPE = 'Foo'; class SelectOption { constructor(label, value) { this.label = label; this.value = value; } } export { ENTITY_TYPE, SelectOption };",
+  },
 ];
 
 const invalid: {
@@ -436,6 +440,11 @@ const invalid: {
   {
     name: "Class component and non-component via export { }",
     code: "class MyComponent extends React.Component { render() { return null; } } const foo = () => {}; export { MyComponent, foo };",
+    errorId: "namedExport",
+  },
+  {
+    name: "Component and SCREAMING_SNAKE_CASE constant via export { }",
+    code: "const Foo = () => {}; const BAR = 1; export { Foo, BAR };",
     errorId: "namedExport",
   },
 ];

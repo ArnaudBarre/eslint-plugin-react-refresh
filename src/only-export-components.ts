@@ -313,6 +313,20 @@ export const onlyExportComponents: TSESLint.RuleModule<
                   handleExportDeclaration(def.node);
                   continue;
                 }
+                if (
+                  def?.type === "Variable"
+                  && def.node.type === "VariableDeclarator"
+                  && def.node.init !== null
+                ) {
+                  handleExportIdentifier(
+                    specifier.exported.type === "Identifier"
+                      && specifier.exported.name === "default"
+                      ? specifier.local
+                      : specifier.exported,
+                    def.node.init,
+                  );
+                  continue;
+                }
               }
               handleExportIdentifier(
                 specifier.exported.type === "Identifier"
