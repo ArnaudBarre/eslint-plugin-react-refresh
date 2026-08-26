@@ -359,12 +359,12 @@ export const onlyExportComponents: TSESLint.RuleModule<
             for (const node of reactContextExports) {
               context.report({ messageId: "reactContext", node });
             }
-          } else if (localComponents.length) {
+          } else if (localComponents.length > 0) {
             for (const node of localComponents) {
               context.report({ messageId: "localComponents", node });
             }
           }
-        } else if (localComponents.length) {
+        } else if (localComponents.length > 0) {
           for (const node of localComponents) {
             context.report({ messageId: "noExport", node });
           }

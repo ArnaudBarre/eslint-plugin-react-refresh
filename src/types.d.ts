@@ -29,7 +29,7 @@ export const reactRefresh: {
   };
 };
 
-declare const _default: {
+declare const defaultExport: {
   rules: Rules;
   configs: {
     recommended: Config;
@@ -37,4 +37,4 @@ declare const _default: {
     next: Config;
   };
 };
-export default _default;
+export default defaultExport;
