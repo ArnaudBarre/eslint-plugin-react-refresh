@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.5
+
+- Fix SCREAMING_SNAKE_CASE constant exported via `export { Name }` incorrectly treated as React component [#114](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/114) (fixes [#113](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/113))
+- Add `contentType` and `size` to `allowExportNames` in Next config [#115](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/115)
+
 ## 0.5.4
 
 - Add `instant` to `allowExportNames` in Next config [#112](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/112)
