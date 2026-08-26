@@ -58,6 +58,9 @@ const configs = {
         "generateStaticParams",
         // https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config/instant
         "instant",
+        // https://nextjs.org/docs/app/api-reference/file-conventions/metadata/app-icons#config-exports
+        "contentType",
+        "size",
       ],
     },
   }),
