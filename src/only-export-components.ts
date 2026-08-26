@@ -304,6 +304,11 @@ export const onlyExportComponents: TSESLint.RuleModule<
             hasExports = true;
             if (declaration) handleExportDeclaration(declaration);
             for (const specifier of node.specifiers) {
+              const identifier =
+                specifier.exported.type === "Identifier"
+                && specifier.exported.name === "default"
+                  ? specifier.local
+                  : specifier.exported;
               if (specifier.local.type === "Identifier") {
                 const scope = context.sourceCode.getScope(node);
                 const localName = specifier.local.name;
@@ -313,13 +318,12 @@ export const onlyExportComponents: TSESLint.RuleModule<
                   handleExportDeclaration(def.node);
                   continue;
                 }
+                if (def?.type === "Variable" && def.node.init !== null) {
+                  handleExportIdentifier(identifier, def.node.init);
+                  continue;
+                }
               }
-              handleExportIdentifier(
-                specifier.exported.type === "Identifier"
-                  && specifier.exported.name === "default"
-                  ? specifier.local
-                  : specifier.exported,
-              );
+              handleExportIdentifier(identifier);
             }
           } else if (node.type === "VariableDeclaration") {
             for (const variable of node.declarations) {
