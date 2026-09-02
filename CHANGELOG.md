@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.6
+
+- Support re-exporting namespace components (fixes [#116](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/116))
+
 ## 0.5.5
 
 - Fix SCREAMING_SNAKE_CASE constant exported via `export { Name }` incorrectly treated as React component [#114](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/114) (fixes [#113](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/113))

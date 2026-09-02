@@ -167,6 +167,9 @@ export const onlyExportComponents: TSESLint.RuleModule<
         if (!hocName || !validHOCs.includes(hocName)) return false;
         return "needName";
       }
+      if (exp.type === "MemberExpression" && !exp.computed) {
+        return reactComponentNameRE.test(exp.property.name);
+      }
       return false;
     };
 

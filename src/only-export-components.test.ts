@@ -295,6 +295,11 @@ export function Button(props: PropsWithChildren): ReactNode {
     name: "SCREAMING_SNAKE_CASE constant and class exported via export { Name }",
     code: "const ENTITY_TYPE = 'Foo'; class SelectOption { constructor(label, value) { this.label = label; this.value = value; } } export { ENTITY_TYPE, SelectOption };",
   },
+  {
+    // https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/116
+    name: "Re-exporting namespace component",
+    code: "const A = P.Root; const B = () => <div />; export { A, B }",
+  },
 ];
 
 const invalid: {
