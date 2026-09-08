@@ -36,6 +36,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
           extraHOCs: { type: "array", items: { type: "string" } },
           allowExportNames: { type: "array", items: { type: "string" } },
           allowConstantExport: { type: "boolean" },
+          allowCompoundComponents: { type: "boolean" },
           checkJS: { type: "boolean" },
         },
         additionalProperties: false,
@@ -48,6 +49,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
       extraHOCs = [],
       allowExportNames,
       allowConstantExport = false,
+      allowCompoundComponents = false,
       checkJS = false,
     } = context.options[0] ?? {};
     const filename = context.filename;
@@ -170,6 +172,35 @@ export const onlyExportComponents: TSESLint.RuleModule<
       if (exp.type === "MemberExpression" && !exp.computed) {
         return reactComponentNameRE.test(exp.property.name);
       }
+      // Support compound components: const Tag = { Root, Label }
+      if (allowCompoundComponents && exp.type === "ObjectExpression") {
+        if (exp.properties.length === 0) return false;
+        return exp.properties.every((property) => {
+          if (property.type !== "Property" || property.kind !== "init") {
+            return false;
+          }
+          const value = skipTSWrapper(property.value);
+          // A plain object is not a component, so nesting one is not supported
+          if (value.type === "ObjectExpression") return false;
+          if (
+            value.type === "AssignmentPattern"
+            || value.type === "TSEmptyBodyFunctionExpression"
+          ) {
+            return false;
+          }
+          const result = isExpressionReactComponent(value);
+          // { Root: () => {} }
+          if (result === "needName") {
+            if (property.computed) return false;
+            const key =
+              property.key.type === "Identifier"
+                ? property.key.name
+                : property.key.value;
+            return typeof key === "string" && reactComponentNameRE.test(key);
+          }
+          return result;
+        });
+      }
       return false;
     };
 
@@ -271,6 +302,13 @@ export const onlyExportComponents: TSESLint.RuleModule<
             } else {
               hasReactExport = true;
             }
+          } else if (node.type === "ObjectExpression") {
+            // export default { Root, Label }
+            if (isExpressionReactComponent(node) === false) {
+              nonComponentExports.push(node);
+            } else {
+              hasReactExport = true;
+            }
           } else {
             nonComponentExports.push(node);
           }
@@ -289,6 +327,8 @@ export const onlyExportComponents: TSESLint.RuleModule<
               || declaration.type === "FunctionDeclaration"
               || declaration.type === "ClassDeclaration"
               || declaration.type === "CallExpression"
+              || (allowCompoundComponents
+                && declaration.type === "ObjectExpression")
             ) {
               handleExportDeclaration(declaration);
             }

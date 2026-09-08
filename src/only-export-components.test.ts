@@ -300,6 +300,41 @@ export function Button(props: PropsWithChildren): ReactNode {
     name: "Re-exporting namespace component",
     code: "const A = P.Root; const B = () => <div />; export { A, B }",
   },
+  {
+    name: "Direct export compound component",
+    code: "const Root = () => <div />; export const Tag = { Root };",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Export compound component",
+    code: "const Root = () => <div />; const Label = () => <span />; const Tag = { Root, Label } as const; export { Tag };",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Compound component with inline and wrapped members",
+    code: "export const Tag = { Root: () => <div />, Label: memo(() => <span />), Icon: Icons.Tag };",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Compound component with a lowercase key",
+    code: "const Root = () => <div />; export const Tag = { root: Root };",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Compound component with a string key",
+    code: "export const Foo = () => {}; export const Tag = { 'Root': () => <div /> };",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Default export compound component",
+    code: "const Root = () => <div />; const Label = () => <span />; export default { Root, Label };",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Compound component with method members",
+    code: "export const Tag = { Root() { return <div />; } };",
+    options: { allowCompoundComponents: true },
+  },
 ];
 
 const invalid: {
@@ -451,6 +486,75 @@ const invalid: {
     name: "Component and SCREAMING_SNAKE_CASE constant via export { }",
     code: "const Foo = () => {}; const BAR = 1; export { Foo, BAR };",
     errorId: "namedExport",
+  },
+  {
+    name: "Compound component without allowCompoundComponents",
+    code: "const Root = () => <div />; const Tag = { Root } as const; export { Tag };",
+    errorId: "localComponents",
+  },
+  {
+    name: "Direct export compound component without allowCompoundComponents",
+    code: "const Root = () => <div />; export const Tag = { Root };",
+    errorId: "localComponents",
+  },
+  {
+    name: "Default export object mixing a component and a constant",
+    code: "const Root = () => <div />; export default { Root, size: 1 }; export const Foo = () => {};",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Default export compound component without allowCompoundComponents",
+    code: "const Root = () => <div />; export default { Root };",
+    errorId: "localComponents",
+  },
+  {
+    name: "Component and object of constants",
+    code: "export const Foo = () => {}; export const Config = { limit: 1 };",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Component and empty object",
+    code: "export const Foo = () => {}; export const Empty = {};",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Component and object nesting components",
+    code: "const Root = () => <div />; export const Foo = () => {}; export const Tag = { Nested: { Root } };",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Unexported compound component and export",
+    code: "const Tag = { Root: () => <div /> }; export const helper = 1;",
+    errorId: "localComponents",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Component and object with a getter",
+    code: "export const Foo = () => {}; export const Tag = { get Root() { return Icons.Tag; } };",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Object mixing a component and a constant",
+    code: "const Root = () => <div />; export const Tag = { Root, size: 1 };",
+    errorId: "localComponents",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Object with an anonymous function and a computed key",
+    code: "export const Foo = () => {}; export const Tag = { [Root]: () => <div /> };",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
+  },
+  {
+    name: "Object with an anonymous function and a lowercase key",
+    code: "export const Foo = () => {}; export const Tag = { root: () => <div /> };",
+    errorId: "namedExport",
+    options: { allowCompoundComponents: true },
   },
 ];
 
