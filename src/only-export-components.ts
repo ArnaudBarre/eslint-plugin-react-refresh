@@ -180,7 +180,7 @@ export const onlyExportComponents: TSESLint.RuleModule<
             return false;
           }
           const value = skipTSWrapper(property.value);
-          // A plain object is not a component, so nesting one is not supported
+          // Nesting is not supported by Vite, so we don't support it here either
           if (value.type === "ObjectExpression") return false;
           if (
             value.type === "AssignmentPattern"

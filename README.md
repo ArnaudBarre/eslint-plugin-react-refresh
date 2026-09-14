@@ -217,7 +217,7 @@ export const Foo = () => <></>;
 
 Don't warn when components are exported as an object gathering them. Every member of the object must be a component, and a member holding an anonymous function requires a component name as key.
 
-This should be enabled if the fast refresh implementation correctly handles this case. Vite supports it since `@vitejs/plugin-react` 4.7.0, `@vitejs/plugin-react-swc` 3.11.0 and `@vitejs/plugin-react-oxc` 0.3.0.
+This should be enabled if the fast refresh implementation correctly handles this case. Vite supports it since `@vitejs/plugin-react` 4.7.0, `@vitejs/plugin-react-swc` 3.11.0.
 
 ```json
 {
