@@ -29,7 +29,7 @@ const configs = {
   recommended: buildConfig({ name: "recommended", baseOptions: {} }),
   vite: buildConfig({
     name: "vite",
-    baseOptions: { allowConstantExport: true },
+    baseOptions: { allowConstantExport: true, allowCompoundComponents: true },
   }),
   next: buildConfig({
     name: "next",

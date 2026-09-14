@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.5.7
+
+### Add `allowCompoundComponents` option ([#117](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/117))
+
+> Default: `false` (`true` in `vite` config)
+
+Don't warn when components are exported as an object gathering them. Every member of the object must be a component, and a member holding an anonymous function requires a component name as key.
+
+This should be enabled if the fast refresh implementation correctly handles this case. Vite supports it since `@vitejs/plugin-react` 4.7.0, `@vitejs/plugin-react-swc` 3.11.0.
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "error",
+    { "allowCompoundComponents": true }
+  ]
+}
+```
+
+Enabling this option allows code such as the following:
+
+```jsx
+const Root = () => <></>;
+const Label = () => <></>;
+export const Tag = { Root, Label };
+```
+
 ## 0.5.6
 
 - Support re-exporting namespace components (fixes [#116](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/116))

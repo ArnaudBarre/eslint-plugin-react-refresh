@@ -44,7 +44,7 @@ export default defineConfig(
 
 ### Vite config
 
-This enables the `allowConstantExport` option which is supported by Vite React plugins.
+This enables the `allowConstantExport` and `allowCompoundComponents` options which are supported by Vite React plugins.
 
 ```js
 import { defineConfig } from "eslint/config";
@@ -144,6 +144,7 @@ interface Options {
   extraHOCs?: string[];
   allowExportNames?: string[];
   allowConstantExport?: boolean;
+  allowCompoundComponents?: boolean;
   checkJS?: boolean;
 }
 
@@ -151,6 +152,7 @@ const defaultOptions: Options = {
   extraHOCs: [],
   allowExportNames: [],
   allowConstantExport: false,
+  allowCompoundComponents: false,
   checkJS: false,
 };
 ```
@@ -207,6 +209,31 @@ Enabling this option allows code such as the following:
 ```jsx
 export const CONSTANT = 3;
 export const Foo = () => <></>;
+```
+
+### allowCompoundComponents
+
+> Default: `false` (`true` in `vite` config)
+
+Don't warn when components are exported as an object gathering them. Every member of the object must be a component, and a member holding an anonymous function requires a component name as key.
+
+This should be enabled if the fast refresh implementation correctly handles this case. Vite supports it since `@vitejs/plugin-react` 4.7.0, `@vitejs/plugin-react-swc` 3.11.0.
+
+```json
+{
+  "react-refresh/only-export-components": [
+    "error",
+    { "allowCompoundComponents": true }
+  ]
+}
+```
+
+Enabling this option allows code such as the following:
+
+```jsx
+const Root = () => <></>;
+const Label = () => <></>;
+export const Tag = { Root, Label };
 ```
 
 ### checkJS <small>(v0.3.3)</small>

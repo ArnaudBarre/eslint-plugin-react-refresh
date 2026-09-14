@@ -4,6 +4,7 @@ export type OnlyExportComponentsOptions = {
   extraHOCs?: string[];
   allowExportNames?: string[];
   allowConstantExport?: boolean;
+  allowCompoundComponents?: boolean;
   checkJS?: boolean;
 };
 
