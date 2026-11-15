@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.8
+
+- Handle more cases in export default declaration (fixes [#119](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/issues/119))
+
 ## 0.5.7
 
 ### Add `allowCompoundComponents` option ([#117](https://github.com/ArnaudBarre/eslint-plugin-react-refresh/pull/117))

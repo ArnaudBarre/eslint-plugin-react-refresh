@@ -211,6 +211,11 @@ const valid: {
     options: { allowConstantExport: true },
   },
   {
+    name: "Export default non component alongside a component",
+    code: "export const Foo = () => {}; export default 'CONSTANT'",
+    options: { allowConstantExport: true },
+  },
+  {
     name: "Component and allowed export",
     code: "export const loader = () => {}; export const Bar = () => {};",
     options: { allowExportNames: ["loader", "meta"] },
@@ -391,6 +396,11 @@ const invalid: {
     name: "Export default anonymous function",
     code: "export default function () {};",
     errorId: "anonymousExport",
+  },
+  {
+    name: "Export default non component alongside a component",
+    code: "export const Foo = () => {}; export default [1, 2]",
+    errorId: "namedExport",
   },
   {
     name: "Component and constant",

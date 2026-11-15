@@ -331,12 +331,18 @@ export const onlyExportComponents: TSESLint.RuleModule<
                 && declaration.type === "ObjectExpression")
             ) {
               handleExportDeclaration(declaration);
-            }
-            if (declaration.type === "Identifier") {
+            } else if (declaration.type === "Identifier") {
               handleExportIdentifier(declaration);
-            }
-            if (declaration.type === "ArrowFunctionExpression") {
+            } else if (declaration.type === "ArrowFunctionExpression") {
               context.report({ messageId: "anonymousExport", node });
+            } else {
+              if (
+                allowConstantExport
+                && constantExportExpressions.has(declaration.type)
+              ) {
+                return;
+              }
+              nonComponentExports.push(declaration);
             }
           } else if (node.type === "ExportNamedDeclaration") {
             if (node.exportKind === "type") continue;
@@ -432,7 +438,7 @@ const skipTSWrapper = <T extends TSESTree.Node>(node: T) => {
 
 type ToString<T> = T extends `${infer V}` ? V : never;
 const constantExportExpressions = new Set<
-  ToString<TSESTree.Expression["type"]>
+  ToString<TSESTree.DefaultExportDeclarations["type"]>
 >([
   "Literal", // 1, "foo"
   "UnaryExpression", // -1
